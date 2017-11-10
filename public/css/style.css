@@ -1,0 +1,30 @@
+.content-wrapper {
+	margin-bottom: 6px;
+}
+
+footer.place-bottom {
+	position: fixed;
+	bottom: 0px;
+	right: 0;
+	left: 0;
+}
+
+.text-right { text-align: right; }
+
+.text-center { text-align: center; }
+
+.btn-flex { display: flex; }
+
+form .form-body.overflow-none { overflow: unset !important; }
+
+form .text-info {
+    font-weight: bold;
+    height: 33.5px;
+}
+
+@media (max-width: 767px) {
+    
+}
+@media (max-width: 991px) and (min-width: 768px) {
+    
+}
