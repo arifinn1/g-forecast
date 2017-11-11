@@ -1,8 +1,14 @@
- function ShowAlert(id, pesan, alert){
+ function show_alert(id, pesan, alert){
     $(id).hide();
     $(id).html('<div class="alert alert-'+alert+' alert-dismissable" role="alert">'+
         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'+pesan+'</div>');
     $(id).show('slow');
+}
+
+function month_by_int(index){
+  index -= 1;
+  var month = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep','Okt', 'Nov', 'Des'];
+  return month[index];
 }
 
 function dateonly_sql_to_js(date){

@@ -17,9 +17,24 @@ footer.place-bottom {
 
 form .form-body.overflow-none { overflow: unset !important; }
 
-form .text-info {
+form .text-info.bold {
     font-weight: bold;
+}
+
+form .text-info {
     height: 33.5px;
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.table-selected tbody tr {
+  cursor: pointer;
+}
+
+.loading {
+  padding: 20px;
 }
 
 @media (max-width: 767px) {

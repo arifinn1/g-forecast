@@ -179,9 +179,9 @@
                 res = res.split("|");
                 res[1] = JSON.parse(res[1]);
                 if(res[0]=="BARU"){
-                    ShowAlert("#alert-input","<strong>Sukses!</strong> Data baru telah berhasil tersimpan.", "success");
+                    show_alert("#alert-input","<strong>Sukses!</strong> Data baru telah berhasil tersimpan.", "success");
 				}else if(res[0]=="UBAH"){
-                    ShowAlert("#alert-input","<strong>Sukses!</strong> Data telah berhasil dirubah.", "success");
+                    show_alert("#alert-input","<strong>Sukses!</strong> Data telah berhasil dirubah.", "success");
 				}
 				
                 ReloadTampil(res[1], res[0]);
@@ -222,8 +222,8 @@
                     if(res>0){
                         tjadwal.row(active_row).remove().draw();
                         active_row = null;
-                        ShowAlert("#alert-view","<strong>Sukses!</strong> Data berhasil dihapus.", "success");
-                    }else{ ShowAlert("#alert-view","<strong>Gagal!</strong> Data gagal dihapus.", "warning"); }
+                        show_alert("#alert-view","<strong>Sukses!</strong> Data berhasil dihapus.", "success");
+                    }else{ show_alert("#alert-view","<strong>Gagal!</strong> Data gagal dihapus.", "warning"); }
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {

@@ -138,31 +138,31 @@
 
     function Simpan()
     {
-        jQuery.ajax({
-            type: "POST",
-			url: "/akun/simpan",
-			data: $('#form-akun').serialize(),
-			success: function(res)
-			{
-                res = res.split("|");
-                res[1] = JSON.parse(res[1]);
-                
-                if(res[0]=="BARU"){
-                    ShowAlert("#alert-input","<strong>Sukses!</strong> Data baru telah berhasil tersimpan.", "success");
-				}else if(res[0]=="UBAH"){
-                    ShowAlert("#alert-input","<strong>Sukses!</strong> Data telah berhasil dirubah.", "success");
-				}else if(res[0]=="NIK"){ ShowAlert("#alert-input","<strong>Gagal!</strong> NIK telah terdaftar.", "warning"); }
-				
-                if(res[0]=="BARU" || res[0]=="UBAH"){ 
-                    ReloadTampil(res[1], res[0]);
-                }
-			},
-			error: function (jqXHR, textStatus, errorThrown)
-			{
-				if(confirm("Simpan data gagal, coba lagi?")){ Simpan(); }
-			}
-		});
-        return false;
+      jQuery.ajax({
+        type: "POST",
+        url: "/akun/simpan",
+        data: $('#form-akun').serialize(),
+        success: function(res)
+        {
+                  res = res.split("|");
+                  res[1] = JSON.parse(res[1]);
+                  
+                  if(res[0]=="BARU"){
+                      show_alert("#alert-input","<strong>Sukses!</strong> Data baru telah berhasil tersimpan.", "success");
+          }else if(res[0]=="UBAH"){
+                      show_alert("#alert-input","<strong>Sukses!</strong> Data telah berhasil dirubah.", "success");
+          }else if(res[0]=="NIK"){ show_alert("#alert-input","<strong>Gagal!</strong> NIK telah terdaftar.", "warning"); }
+          
+                  if(res[0]=="BARU" || res[0]=="UBAH"){ 
+                      ReloadTampil(res[1], res[0]);
+                  }
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          if(confirm("Simpan data gagal, coba lagi?")){ Simpan(); }
+        }
+      });
+      return false;
     }
 
     function ReloadTampil(data, op){
@@ -193,8 +193,8 @@
                     if(res>0){
                         takun.row(active_row).remove().draw();
                         active_row = null;
-                        ShowAlert("#alert-view","<strong>Sukses!</strong> Data berhasil dihapus.", "success");
-                    }else{ ShowAlert("#alert-view","<strong>Gagal!</strong> Data gagal dihapus.", "warning"); }
+                        show_alert("#alert-view","<strong>Sukses!</strong> Data berhasil dihapus.", "success");
+                    }else{ show_alert("#alert-view","<strong>Gagal!</strong> Data gagal dihapus.", "warning"); }
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {
