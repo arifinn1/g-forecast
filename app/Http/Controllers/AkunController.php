@@ -65,7 +65,7 @@ class AkunController extends Controller
 
     public function proses_ganti_pass(Request $request, User $akun)
     {
-        $ret = "";
+        $ret = "TEST";
 
         if($akun->cek_pass($request->session()->get('nik'), $request->input('pass_lama')))
         {

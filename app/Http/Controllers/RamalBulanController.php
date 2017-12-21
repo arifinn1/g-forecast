@@ -28,6 +28,26 @@ class RamalBulanController extends Controller
     public function ambil_penjualan(Request $request)
     {
       $penjbulan = new PenjBulan();
-      echo json_encode($penjbulan->ambil_penjualan($request->input('kd_prod')));
+      $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
+      $data = json_decode(json_encode($data), true);
+      echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
+      //echo json_encode($data);
+    }
+
+    public function ambil_penjualan_m(String $kd)
+    {
+      $penjbulan = new PenjBulan();
+      $data = $penjbulan->ambil_penjualan($kd);
+
+      $data = json_decode(json_encode($data), true);
+      //$data2 = $penjbulan->resolve_missing_val($data);
+
+      echo "<pre>";
+      print_r($data);
+      //print_r($data2);
+      echo "</pre>";
+
+      $penjbulan->operasi_genetika($data);
+      //echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
     }
 }

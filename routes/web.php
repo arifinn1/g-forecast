@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/ramal/bulan', 'RamalBulanController@index')->name('ramal_bulan');    
     Route::post('/ramal/bulan/cari_produk', 'RamalBulanController@cari_produk')->name('rb_cari_produk');    
     Route::post('/ramal/bulan/ambil_penjualan', 'RamalBulanController@ambil_penjualan')->name('ambil_penjualan');    
+    Route::get('/ramal/bulan/ambil_penjualan/{kd}', 'RamalBulanController@ambil_penjualan_m')->name('ambil_penjualan');    
 });
 
 Auth::routes();
