@@ -58,6 +58,18 @@ form .text-info {
   padding-left: 0px !important;
 }
 
+.nav-pills.chat .nav-link {
+  border-radius: 2rem;
+  width: 4rem;
+  height: 4rem;
+}
+
+.nav-pills.chat.active .nav-link {
+  background: url("https://img00.deviantart.net/8db1/i/2016/027/e/f/portrait_of_marina_nery_by_nad4r-d9pi6qd.jpg") no-repeat center center;
+    background-size: auto auto;
+  background-size: cover;
+}
+
 @media (max-width: 767px) {
     
 }
