@@ -6,17 +6,22 @@ use Illuminate\Http\Request;
 use App\RamalBulan;
 use App\Produk;
 use App\PenjBulan;
+use Session;
+use Response;
 
 class RamalBulanController extends Controller
 {
     public function index(Request $request)
     {
-        $data = [];
-        $data['chart'] = true;
-        $data['title'] = 'Ramal Bulan - Genetic Forecast';
-        $data['nama'] = $request->session()->get('nama');
+      $produk = new Produk();
 
-        return view('ramal/bulan', $data);
+      $data = [];
+      //$data['chart'] = true;
+      $data['title'] = 'Ramal Bulan - Genetic Forecast';
+      $data['nama'] = $request->session()->get('nama');
+      $data['produk'] = $produk->tampil_produk();
+
+      return view('ramal/bulann', $data);
     }
 
     public function cari_produk(Request $request)
@@ -31,7 +36,6 @@ class RamalBulanController extends Controller
       $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
       $data = json_decode(json_encode($data), true);
       echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
-      //echo json_encode($data);
     }
 
     public function ambil_penjualan_m(String $kd)
@@ -49,5 +53,26 @@ class RamalBulanController extends Controller
 
       $penjbulan->operasi_genetika($data);
       //echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
+    }
+
+    public function test_progress()
+    {
+      if (Session::has('progress')){
+        return Response::json(Session::get('progress'));
+      } else {
+        return Response::json(0);
+      }
+    }
+
+    public function test_proses()
+    {
+      Session::put('progress', 0);
+      Session::save();
+
+      for($i=0; $i<5; $i++){
+        sleep(1);
+        Session::put('progress', $i+1);
+        Session::save();
+      }
     }
 }

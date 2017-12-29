@@ -37,6 +37,27 @@ form .text-info {
   padding: 20px;
 }
 
+.btn-group-justified > .btn, .btn-group-justified > .btn-group {
+  display: table-cell;
+  float: none;
+  width: 1%;
+}
+
+.progress.with-btn {
+  height: 24.3px;
+}
+
+.btn-group-justified {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+}
+
+.del-left-pad {
+  padding-left: 0px !important;
+}
+
 @media (max-width: 767px) {
     
 }

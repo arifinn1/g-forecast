@@ -125,6 +125,11 @@ class PenjBulan extends Model
       }
       $Err[$i] = $Err[$i] / $pop_size;
       $P[$i+1] = $temp_p;
+
+      if($this->cek_alp_gam($Offs[$i], 0.00001, 0.99999)){
+        $maxgen = $i + 1;
+        break;
+      }
     }
     
     /*echo "<pre>";
@@ -132,6 +137,7 @@ class PenjBulan extends Model
     echo "<br><br>Pcross : "; print_r($Pcross);
     echo "<br><br>Pmut : "; print_r($Pmut);
     echo "<br><br>Offs : "; print_r($Offs);
+    echo "<br><br>Offs : "; print_r($Offs[$maxgen-1]);
     print_r($Err);
     echo "</pre>";*/
 
@@ -140,6 +146,19 @@ class PenjBulan extends Model
     $hasil = $this->peramal($data_penju, array( $hasil[0]['alpha'], $hasil[0]['gamma'] ), true);
 
     return json_encode($hasil['ftm'])."||".json_encode($Err)."||".json_encode($Offs[0])."||".json_encode($Offs[$maxgen-1]);
+  }
+
+  function cek_alp_gam($data, $min, $max){
+    usort($data, function($a, $b) { return $a['alpha'] <=> $b['alpha']; });
+    $max_alpha = $data[count($data)-1]['alpha'];
+    $min_alpha = $data[0]['alpha'];
+    usort($data, function($a, $b) { return $a['gamma'] <=> $b['gamma']; });
+    $max_gamma = $data[count($data)-1]['gamma'];
+    $min_gamma = $data[0]['gamma'];
+
+    if($max_alpha > $max || $max_gamma > $max || $min_alpha < $min || $min_gamma < $min){
+      return true;
+    }else{ return false; }
   }
 
   function peramal($data, $alp_gam, $show_ftm = false){
