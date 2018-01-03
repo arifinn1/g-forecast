@@ -55,7 +55,7 @@ class PenjBulan extends Model
     return $data;
   }
 
-  public function operasi_genetika($data)
+  public function operasi_genetika($data, $min)
   {
     $data_penju = [];
     for($i=0; $i<count($data); $i++){
@@ -141,11 +141,47 @@ class PenjBulan extends Model
     print_r($Err);
     echo "</pre>";*/
 
-    $hasil = $Offs[$maxgen-1];
-    usort($hasil, function($a, $b) { return $a['mapee'] <=> $b['mapee']; });
-    $hasil = $this->peramal($data_penju, array( $hasil[0]['alpha'], $hasil[0]['gamma'] ), true);
+    $hasil_temp = $Offs[$maxgen-1];
+    usort($hasil_temp, function($a, $b) { return $a['mapee'] <=> $b['mapee']; });
+    $hasil1 = $this->peramal($data_penju, array( $hasil_temp[0]['alpha'], $hasil_temp[0]['gamma'] ), true);
+    $hasil2 = $this->peramal($data_penju, array( $hasil_temp[0]['alpha'], $hasil_temp[0]['gamma'] ));
 
-    return json_encode($hasil['ftm'])."||".json_encode($Err)."||".json_encode($Offs[0])."||".json_encode($Offs[$maxgen-1]);
+    if($min){
+      return json_encode($hasil1['ftm'])."||".json_encode($this->error_min($Err))."||".$maxgen."||".($hasil_temp[0]['alpha'])."||".($hasil_temp[0]['gamma'])."||".($hasil2['mapee']);
+    }else{
+      return json_encode($hasil1['ftm'])."||".json_encode($Err)."||".json_encode($Offs[0])."||".json_encode($Offs[$maxgen-1]);
+    }
+  }
+
+  function error_min($error){
+    $label = [];
+    $data = [];
+    $len_err = count($error);
+    $max_err = ($len_err > 20 ? 20 : $len_err);
+    $incre = $len_err/20;
+    $curr_gen = -1;
+    for($i=0; $i<$max_err; $i++){
+      if($len_err > 20){
+        $curr_gen = floor($i*$incre) + 1;
+        if($i==0){
+          $data[$i] = $error[0];
+          $label[$i] = 1;
+        }else{
+          $data[$i] = $error[$curr_gen];
+          $label[$i] = $curr_gen;
+        }
+        
+        if($len_err==1000 && $i==$max_err-1){
+          $data[20] = $error[999];
+          $label[20] = 1000;
+        }
+      }else{ 
+        $data[$i] = $error[$i];
+        $label[$i] = $i+1;
+      }
+    }
+
+    return array($data, $label);
   }
 
   function cek_alp_gam($data, $min, $max){

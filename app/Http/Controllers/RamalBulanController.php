@@ -16,6 +16,7 @@ class RamalBulanController extends Controller
       $produk = new Produk();
 
       $data = [];
+      $data['scroll'] = true;
       //$data['chart'] = true;
       $data['title'] = 'Ramal Bulan - Genetic Forecast';
       $data['nama'] = $request->session()->get('nama');
@@ -35,7 +36,15 @@ class RamalBulanController extends Controller
       $penjbulan = new PenjBulan();
       $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
       $data = json_decode(json_encode($data), true);
-      echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
+      echo json_encode($data)."||".($penjbulan->operasi_genetika($data, false));
+    }
+
+    public function ambil_penjualan_min(Request $request)
+    {
+      $penjbulan = new PenjBulan();
+      $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
+      $data = json_decode(json_encode($data), true);
+      echo $penjbulan->operasi_genetika($data, true);
     }
 
     public function ambil_penjualan_m(String $kd)
@@ -47,11 +56,11 @@ class RamalBulanController extends Controller
       //$data2 = $penjbulan->resolve_missing_val($data);
 
       echo "<pre>";
-      print_r($data);
+      print_r($penjbulan->operasi_genetika($data, true));
       //print_r($data2);
       echo "</pre>";
 
-      $penjbulan->operasi_genetika($data);
+      //$penjbulan->operasi_genetika($data, true);
       //echo json_encode($data)."||".($penjbulan->operasi_genetika($data));
     }
 

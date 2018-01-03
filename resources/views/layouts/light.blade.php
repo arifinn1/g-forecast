@@ -273,6 +273,12 @@
     <script src="{{ asset('robust-assets/js/core/app.js') }}" type="text/javascript"></script>
     <!-- END ROBUST JS-->
 
+    <?php if(isset($scroll)){ ?>
+    <!-- BEGIN scrollTo JS-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+    <!-- END CHART JS-->
+    <?php } ?>
+
     <?php if(isset($chart)){ ?>
     <!-- BEGIN CHART JS-->
     <script src="{{ asset('robust-assets/vendors/js/charts/chart.min.js') }}" type="text/javascript"></script>
