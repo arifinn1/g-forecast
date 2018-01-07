@@ -1,5 +1,5 @@
 .content-wrapper {
-	margin-bottom: 6px;
+	/*margin-bottom: 6px;*/
 }
 
 footer.place-bottom {
@@ -12,6 +12,16 @@ footer.place-bottom {
 .text-right { text-align: right; }
 
 .text-center { text-align: center; }
+
+code.success {
+  color: #3BCE1E;
+  background-color: rgba(115, 237, 85, 0.1);
+}
+
+code.primary {
+  color: #704acf;
+  background-color: rgba(174, 85, 237, 0.1);
+}
 
 .btn-flex { display: flex; }
 
@@ -27,6 +37,10 @@ form .text-info {
 
 .no-padding {
   padding: 0px;
+}
+
+.card-block.pad-less {
+  padding: 0.8rem;
 }
 
 .table-selected tbody tr {

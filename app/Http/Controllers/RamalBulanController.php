@@ -17,7 +17,7 @@ class RamalBulanController extends Controller
 
       $data = [];
       $data['scroll'] = true;
-      //$data['chart'] = true;
+      $data['chart'] = true;
       $data['title'] = 'Ramal Bulan - Genetic Forecast';
       $data['nama'] = $request->session()->get('nama');
       $data['produk'] = $produk->tampil_produk();
@@ -44,7 +44,14 @@ class RamalBulanController extends Controller
       $penjbulan = new PenjBulan();
       $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
       $data = json_decode(json_encode($data), true);
-      echo $penjbulan->operasi_genetika($data, true);
+      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod');
+    }
+
+    public function simpan_ramal(Request $request)
+    {
+      $ramalbulan = new RamalBulan();
+      $data = json_decode($request->input('data'));
+      echo $ramalbulan->simpan($data);
     }
 
     public function ambil_penjualan_m(String $kd)

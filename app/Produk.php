@@ -29,7 +29,8 @@ class Produk extends Model
     $data = DB::table("f_penj_bulan as f")
       ->select(DB::raw("p.kd_prod, p.nm_db, COUNT(f.kd_f)AS panjang"))
       ->leftJoin('d_prod as p', 'f.kd_prod', '=', 'p.kd_prod')
-      ->groupBy('kd_prod')
+      ->groupBy('f.kd_prod')
+      ->havingRaw('COUNT(f.kd_f) > 1')
       ->get();
     
     return $data;

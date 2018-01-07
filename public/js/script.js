@@ -1,8 +1,36 @@
-function show_alert(id, pesan, alert){
+function show_alert(id, pesan, alert, timeout = 0){
   $(id).hide();
   $(id).html('<div class="alert alert-'+alert+' alert-dismissable" role="alert">'+
       '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'+pesan+'</div>');
   $(id).show('slow');
+
+  if(timeout>0){
+    setTimeout(function(){ $(id).hide('slow'); }, timeout);
+  }
+}
+
+function block_card(id){
+  var block_ele = $(id).closest('.card');
+
+  // Block Element
+  block_ele.block({
+      message: '<div class="icon-spinner9 icon-spin icon-lg"></div>',
+      //timeout: 2000, //unblock after 2 seconds
+      overlayCSS: {
+          backgroundColor: '#FFF',
+          cursor: 'wait',
+      },
+      css: {
+          border: 0,
+          padding: 0,
+          backgroundColor: 'none'
+      }
+  });
+}
+
+function unblock_card(id){
+  var block_ele = $(id).closest('.card');
+  block_ele.unblock();
 }
 
 function show_fade(id, pesan){
@@ -44,5 +72,5 @@ function msToTime(duration) {
     , minutes = parseInt((duration/(1000*60))%60)
     , hours = parseInt((duration/(1000*60*60))%24);
   
-  return (hours>0? hours+" jam":"")+(minutes>0? minutes+" menit":"")+(seconds>0? seconds+" detik":"");
+  return (hours>0? hours+" jam ":"")+(minutes>0? minutes+" menit ":"")+(seconds>0? seconds+" detik":"");
 }

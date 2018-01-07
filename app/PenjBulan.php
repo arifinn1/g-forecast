@@ -55,7 +55,7 @@ class PenjBulan extends Model
     return $data;
   }
 
-  public function operasi_genetika($data, $min)
+  public function operasi_genetika($data, $min, $res_leng = 4)
   {
     $data_penju = [];
     for($i=0; $i<count($data); $i++){
@@ -63,7 +63,7 @@ class PenjBulan extends Model
     }
 
     $pop_size = 10;
-    $maxgen = 1000;
+    $maxgen = 500;
     $pm = 0.1;
     $pc = 0.3;
 
@@ -130,6 +130,15 @@ class PenjBulan extends Model
         $maxgen = $i + 1;
         break;
       }
+
+      //srink the memory
+      /*if($i>3){
+        $P[$i-2] = [];
+        $Eval[$i-2] = [];
+        $Offs[$i-2] = [];
+        $Pcross[$i-2] = [];
+        $Pmut[$i-2] = [];
+      }*/
     }
     
     /*echo "<pre>";
@@ -143,14 +152,45 @@ class PenjBulan extends Model
 
     $hasil_temp = $Offs[$maxgen-1];
     usort($hasil_temp, function($a, $b) { return $a['mapee'] <=> $b['mapee']; });
-    $hasil1 = $this->peramal($data_penju, array( $hasil_temp[0]['alpha'], $hasil_temp[0]['gamma'] ), true);
+    $hasil1 = $this->peramal($data_penju, array( $hasil_temp[0]['alpha'], $hasil_temp[0]['gamma'] ), $res_leng);
     $hasil2 = $this->peramal($data_penju, array( $hasil_temp[0]['alpha'], $hasil_temp[0]['gamma'] ));
 
     if($min){
-      return json_encode($hasil1['ftm'])."||".json_encode($this->error_min($Err))."||".$maxgen."||".($hasil_temp[0]['alpha'])."||".($hasil_temp[0]['gamma'])."||".($hasil2['mapee']);
+      return json_encode($this->data_min($data, $res_leng))."||".json_encode($hasil1['ftm'])."||".json_encode($this->error_min($Err))."||".$maxgen."||".($hasil_temp[0]['alpha'])."||".($hasil_temp[0]['gamma'])."||".($hasil2['mape'])."||".($hasil2['mse']);
     }else{
       return json_encode($hasil1['ftm'])."||".json_encode($Err)."||".json_encode($Offs[0])."||".json_encode($Offs[$maxgen-1]);
     }
+  }
+
+  function data_min($data_p, $res_leng){
+    $label = [];
+    $data = [];
+
+    for($i=0; $i<count($data_p); $i++){
+      $label[$i] = $this->month_by_int($data_p[$i]['bulan'])." ".substr((string) $data_p[$i]['tahun'], -2);
+      if(($i+1) == count($data_p)){
+        for($j=1; $j<=$res_leng; $j++){
+          $bln = $data_p[$i]['bulan']+$j;
+          $thn = $data_p[$i]['tahun'];
+          if($data_p[$i]['bulan']+$j > 12){
+            $idx = $data_p[$i]['bulan']+$j-12;
+            $thn++;
+          }
+          
+          $label[$i+$j] = $this->month_by_int($bln)." ".substr((string) $thn, -2);
+        }
+      }
+
+      $data[$i] = floatval($data_p[$i]['jumlah']);
+    }
+
+    return array($data, $label);
+  }
+
+  function month_by_int($index){
+    $index -= 1;
+    $month = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep','Okt', 'Nov', 'Des'];
+    return $month[$index];
   }
 
   function error_min($error){
@@ -171,9 +211,9 @@ class PenjBulan extends Model
           $label[$i] = $curr_gen;
         }
         
-        if($len_err==1000 && $i==$max_err-1){
-          $data[20] = $error[999];
-          $label[20] = 1000;
+        if($i==$max_err-1){
+          $data[20] = $error[$len_err-1];
+          $label[20] = $len_err;
         }
       }else{ 
         $data[$i] = $error[$i];
@@ -197,7 +237,7 @@ class PenjBulan extends Model
     }else{ return false; }
   }
 
-  function peramal($data, $alp_gam, $show_ftm = false){
+  function peramal($data, $alp_gam, $final_res = 0){
     $st = [];
     $dt = [];
     $ftm = [];
@@ -219,6 +259,11 @@ class PenjBulan extends Model
         $ftm[$i] = $st[$i-1] + $dt[$i-1];
         if(($i+1) == count($data)){
           $ftm[$i+1] = $st[$i] + $dt[$i];
+          if($final_res>0){
+            for($j=1; $j<$final_res; $j++){
+              $ftm[$i+1+$j] = $st[$i] + ($dt[$i] * ($j+1));
+            }
+          }
         }
       }
 
@@ -228,7 +273,7 @@ class PenjBulan extends Model
 
     $mse = $mse / (count($data) - 1);
     $mape = ($mape / (count($data) - 1)) * 100;
-    if($show_ftm){ return array( 'ftm'=> $ftm, 'mse'=> $mse, 'mape'=> $mape );
+    if($final_res>0){ return array( 'ftm'=> $ftm, 'mse'=> $mse, 'mape'=> $mape );
     }else{ return array( 'alpha'=> $alp_gam[0], 'gamma'=> $alp_gam[1], 'mse'=> $mse, 'mape'=> $mape, 'mapee'=> abs($mape) ); }
   }
 

@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/ramal/bulan/cari_produk', 'RamalBulanController@cari_produk')->name('rb_cari_produk');    
   Route::post('/ramal/bulan/ambil_penjualan', 'RamalBulanController@ambil_penjualan')->name('ambil_penjualan');    
   Route::post('/ramal/bulan/ambil_penjualan_min', 'RamalBulanController@ambil_penjualan_min')->name('ambil_penjualan_min');    
+  Route::post('/ramal/bulan/simpan_ramal', 'RamalBulanController@simpan_ramal')->name('simpan_ramal');    
   //Route::get('/ramal/bulan/ambil_penjualan_m/{kd}', 'RamalBulanController@ambil_penjualan_m')->name('ambil_penjualan_m');
 
   Route::get('/ramal/bulan/test_progress', 'RamalBulanController@test_progress')->name('test_progress');
