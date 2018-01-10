@@ -44,7 +44,7 @@ class RamalBulanController extends Controller
       $penjbulan = new PenjBulan();
       $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
       $data = json_decode(json_encode($data), true);
-      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod');
+      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data);
     }
 
     public function simpan_ramal(Request $request)

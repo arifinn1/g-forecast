@@ -194,9 +194,9 @@
       success: function(res)
       {
         if(res=='SUCCESS'){
-          show_alert(`#div-mess`, `<strong>Sukses!</strong> `+hasil.length+` Data peramalan berhasil disimpan.`, `success`, 3000);
+          show_alert(`#div-mess`, `<strong>Sukses!</strong> `+hasil.length+` Data peramalan berhasil disimpan.`, `success`, 0);
         }else{
-          show_alert(`#div-mess`, `<strong>Peringatan!</strong> Penyimpanan peramalan gagal, periksa koneksi dan refresh halaman.`, `warning`, 3000);
+          show_alert(`#div-mess`, `<strong>Peringatan!</strong> Penyimpanan peramalan gagal, periksa koneksi dan refresh halaman.`, `warning`, 0);
         }
       },
       error: function (jqXHR, textStatus, errorThrown)

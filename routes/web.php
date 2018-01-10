@@ -33,6 +33,11 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/ramal/bulan/simpan_ramal', 'RamalBulanController@simpan_ramal')->name('simpan_ramal');    
   //Route::get('/ramal/bulan/ambil_penjualan_m/{kd}', 'RamalBulanController@ambil_penjualan_m')->name('ambil_penjualan_m');
 
+  Route::get('/lapor/bulan', 'LaporanController@bulan')->name('lapor_bulan');    
+  Route::get('/lapor/bulan/{tanggal}/', 'LaporanController@bulan')->name('lapor_bulan_by');    
+  Route::get('/lapor/cetak_dbulan/{kd}/', 'LaporanController@cetak_det_bulan')->name('cetak_det_bulan');    
+  Route::get('/lapor/cetak_bulan/{tanggal}/', 'LaporanController@cetak_bulan')->name('cetak_bulan');    
+  
   Route::get('/ramal/bulan/test_progress', 'RamalBulanController@test_progress')->name('test_progress');
   Route::get('/ramal/bulan/test_proses', 'RamalBulanController@test_proses')->name('test_proses');
 });

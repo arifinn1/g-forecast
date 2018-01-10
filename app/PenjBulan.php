@@ -173,7 +173,7 @@ class PenjBulan extends Model
           $bln = $data_p[$i]['bulan']+$j;
           $thn = $data_p[$i]['tahun'];
           if($data_p[$i]['bulan']+$j > 12){
-            $idx = $data_p[$i]['bulan']+$j-12;
+            $bln = $data_p[$i]['bulan']+$j-12;
             $thn++;
           }
           
@@ -257,12 +257,13 @@ class PenjBulan extends Model
         $st[$i] = ($alp_gam[0] * $data[$i])+((1-$alp_gam[0]) * ($st[$i-1]+$dt[$i-1]));
         $dt[$i] = ($alp_gam[1] * ($st[$i]-$st[$i-1]))+((1-$alp_gam[1]) * $dt[$i-1]);
         $ftm[$i] = $st[$i-1] + $dt[$i-1];
-        if(($i+1) == count($data)){
-          $ftm[$i+1] = $st[$i] + $dt[$i];
-          if($final_res>0){
-            for($j=1; $j<$final_res; $j++){
-              $ftm[$i+1+$j] = $st[$i] + ($dt[$i] * ($j+1));
-            }
+      }
+
+      if(($i+1) == count($data)){
+        $ftm[$i+1] = $st[$i] + $dt[$i];
+        if($final_res>0){
+          for($j=1; $j<$final_res; $j++){
+            $ftm[$i+1+$j] = $st[$i] + ($dt[$i] * ($j+1));
           }
         }
       }

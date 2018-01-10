@@ -38,9 +38,17 @@
 
     <?php if(isset($datatables)){ ?>
     <!-- BEGIN DataTables-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('datatables/datatables.min.css') }}"/>
-    <script type="text/javascript" src="{{ asset('datatables/datatables.min.js') }}"></script>
+    <!--<link rel="stylesheet" type="text/css" href="{{ asset('datatables/datatables.min.css') }}"/>
+    <script type="text/javascript" src="{{ asset('datatables/datatables.min.js') }}"></script>-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <!-- END DataTables-->
+    <?php } ?>
+
+    <?php if(isset($ex_pdf)){ ?>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"/>
     <?php } ?>
 
     <?php if(isset($datetimepicker)){ ?>
@@ -226,7 +234,7 @@
                     <ul class="menu-content">
                         <li><a href="layout-boxed.html" class="menu-item">Harian</a></li>
                         <li><a href="layout-static.html" class="menu-item">Mingguan</a></li>
-                        <li class="{{ Request::path() == 'lapor/bulan' ? 'active' : '' }}"><a href="#" class="menu-item">Bulanan</a></li>
+                        <li class="{{ Request::path() == 'lapor/bulan' ? 'active' : '' }}"><a href="{{ route('lapor_bulan') }}" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-shopping-basket"></i><span class="menu-title">Rencana Pembelian</span></a>
