@@ -26,9 +26,9 @@
       <h4 class="margin-b-15">{{ $dramal[0]->nm_db }}</h4>
       <dl class="row">
         <dt class="col-xs-4">Riwayat</dt>
-        <dd class="col-xs-8">{{ count($fdata[0]) }} Bulan</dd>
+        <dd class="col-xs-8">{{ count($fdata[0]) }} Minggu</dd>
         <dt class="col-xs-4">Diramalkan</dt>
-        <dd class="col-xs-8">{{ $rleng }} Bulan</dd>
+        <dd class="col-xs-8">{{ $rleng }} Minggu</dd>
         <dt class="col-xs-4">Generasi</dt>
         <dd class="col-xs-8">{{ $edata[1][count($edata[1])-1] }}</dd>
         <dt class="col-xs-4">Alpha, Gamma</dt>
@@ -38,7 +38,7 @@
       </dl>
     </div>
     <div class="col-xs-6 text-xs-right">
-      <h2>BULANAN</h2>
+      <h2>MINGGUAN</h2>
       <p class="pb-3">{{ $fdata[1][count($fdata[0])] }} &nbsp; <i class="icon-arrow-right4"></i> &nbsp; {{ $fdata[1][count($fdata[1])-1] }}</p>
       <ul class="px-0 list-unstyled">
         <li class="text-bold-800">Dibuat</li>
@@ -114,7 +114,7 @@ function BuatChart(){
     },
     title: {
       display: true,
-      text: 'Ramalan Bulan'
+      text: 'Ramalan Mingguan'
     }
   };
 

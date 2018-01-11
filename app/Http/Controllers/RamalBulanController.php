@@ -20,7 +20,7 @@ class RamalBulanController extends Controller
       $data['chart'] = true;
       $data['title'] = 'Ramal Bulan - Genetic Forecast';
       $data['nama'] = $request->session()->get('nama');
-      $data['produk'] = $produk->tampil_produk();
+      $data['produk'] = $produk->tampil_produk_last('bulan');
 
       return view('ramal/bulann', $data);
     }

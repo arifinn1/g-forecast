@@ -226,14 +226,14 @@
                 <li class=" nav-item"><a href="#"><i class="icon-sun-o"></i><span class="menu-title">Peramalan</span></a>
                     <ul class="menu-content">
                         <li><a href="layout-boxed.html" class="menu-item">Harian</a></li>
-                        <li><a href="layout-static.html" class="menu-item">Mingguan</a></li>
+                        <li class="{{ Request::path() == 'ramal/minggu' ? 'active' : '' }}"><a href="{{ route('ramal_minggu') }}" class="menu-item">Mingguan</a></li>
                         <li class="{{ Request::path() == 'ramal/bulan' ? 'active' : '' }}"><a href="{{ route('ramal_bulan') }}" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-file-text3"></i><span class="menu-title">Laporan</span></a>
                     <ul class="menu-content">
                         <li><a href="layout-boxed.html" class="menu-item">Harian</a></li>
-                        <li><a href="layout-static.html" class="menu-item">Mingguan</a></li>
+                        <li class="{{ Request::path() == 'lapor/minggu' ? 'active' : '' }}"><a href="{{ route('lapor_minggu') }}" class="menu-item">Mingguan</a></li>
                         <li class="{{ Request::path() == 'lapor/bulan' ? 'active' : '' }}"><a href="{{ route('lapor_bulan') }}" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>

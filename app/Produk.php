@@ -24,15 +24,53 @@ class Produk extends Model
     return $data;
   }
 
-  public function tampil_produk()
+  public function tampil_produk($periode)
   {
-    $data = DB::table("f_penj_bulan as f")
+    $data = DB::table("f_penj_$periode as f")
       ->select(DB::raw("p.kd_prod, p.nm_db, COUNT(f.kd_f)AS panjang"))
       ->leftJoin('d_prod as p', 'f.kd_prod', '=', 'p.kd_prod')
       ->groupBy('f.kd_prod')
       ->havingRaw('COUNT(f.kd_f) > 1')
       ->get();
     
+    return $data;
+  }
+
+  public function tampil_produk_last($periode)
+  {
+    $data = NULL;
+    if($periode=="bulan"){
+      $data_t = DB::table("f_penj_bulan as f")
+        ->select(DB::raw("MAX(CONCAT(tahun,LPAD(bulan,2,'0'))) AS last_period"))
+        ->first();
+      
+      $data = DB::table("f_penj_bulan as f")
+        ->select(DB::raw("p.kd_prod, p.nm_db, COUNT(f.kd_f)AS panjang"))
+        ->leftJoin('d_prod as p', 'f.kd_prod', '=', 'p.kd_prod')
+        ->whereIn('f.kd_prod', function($query) use ($data_t) {
+            $query->select('kd_prod')->from('f_penj_bulan')
+            ->whereRaw("CONCAT(tahun,LPAD(bulan,2,'0'))=".$data_t->last_period);
+          })
+        ->groupBy('f.kd_prod')
+        ->havingRaw('COUNT(f.kd_f) > 1')
+        ->get();
+    }elseif($periode=="ming"){
+      $data_t = DB::table("f_penj_ming as f")
+        ->select(DB::raw("MAX(CONCAT(tahun,LPAD(minggu,2,'0'))) AS last_period"))
+        ->first();
+      
+      $data = DB::table("f_penj_ming as f")
+        ->select(DB::raw("p.kd_prod, p.nm_db, COUNT(f.kd_f)AS panjang"))
+        ->leftJoin('d_prod as p', 'f.kd_prod', '=', 'p.kd_prod')
+        ->whereIn('f.kd_prod',function($query) use ($data_t){
+            $query->select('kd_prod')->from('f_penj_ming')
+            ->whereRaw("CONCAT(tahun,LPAD(minggu,2,'0'))=".$data_t->last_period);
+          })
+        ->groupBy('f.kd_prod')
+        ->havingRaw('COUNT(f.kd_f) > 1')
+        ->get();
+    }
+
     return $data;
   }
 }

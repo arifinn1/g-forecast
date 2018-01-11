@@ -10,7 +10,7 @@
   <div class="content-header-right breadcrumbs-right breadcrumbs-top col-xs-6">
     <div class="text-right col-xs-12">
       <ul class="px-0 list-unstyled">
-        <h3 class="text-bold-800">PERAMALAN BULANAN</h3>
+        <h3 class="text-bold-800">PERAMALAN MINGGUAN</h3>
         <li style="margin-top: -10px;">Dibuat &nbsp; : &nbsp; {{ date("D, j M Y", strtotime($dramal[0]->dibuat)) }}</li>
       </ul>
     </div>

@@ -16,42 +16,9 @@ class PenjMinggu extends Model
     $data = DB::table("f_penj_ming")
       ->whereRaw("kd_prod=$kd_prod")
       ->orderBy('tahun', 'ASC')
-      ->orderBy('bulan', 'ASC')
+      ->orderBy('minggu', 'ASC')
       ->get();
     
-    return $data;
-  }
-
-  public function resolve_missing_val($data)
-  {
-    $bln_awal = $data[0]['bulan'];
-    $bln_akhir = 12;
-    $cur_idx = 0;
-    $add_idx = 0;
-    $insert = [];
-
-    $avg = 0;
-    for($i=0; $i<count($data); $i++){ $avg += $data[$i]['jumlah']; }
-    $avg = $avg / count($data);
-
-    for($i=$data[0]['tahun']; $i<=$data[count($data)-1]['tahun']; $i++){
-      if($i == $data[count($data)-1]['tahun']){ $bln_akhir = $data[count($data)-1]['bulan']; }
-
-      for($j=$bln_awal; $j<=$bln_akhir; $j++){
-        if($j == $data[$cur_idx]['bulan'] && $i == $data[$cur_idx]['tahun']){
-          $cur_idx++;
-        }else{
-          $insert[] = array( $cur_idx+$add_idx, array("kd_f"=>-1, "tahun"=>$i, "bulan"=>$j, "kd_prod"=>$data[0]['kd_prod'], "jumlah"=>$avg) );
-          $add_idx++;
-        }
-      }
-      $bln_awal = 1;
-    }
-
-    for($i=0; $i<count($insert); $i++){
-      array_splice($data, $insert[$i][0], 0, $insert[$i][1]);
-    }
-
     return $data;
   }
 
@@ -130,25 +97,7 @@ class PenjMinggu extends Model
         $maxgen = $i + 1;
         break;
       }
-
-      //srink the memory
-      /*if($i>3){
-        $P[$i-2] = [];
-        $Eval[$i-2] = [];
-        $Offs[$i-2] = [];
-        $Pcross[$i-2] = [];
-        $Pmut[$i-2] = [];
-      }*/
     }
-    
-    /*echo "<pre>";
-    echo "<br><br>Eval : "; print_r($Eval);
-    echo "<br><br>Pcross : "; print_r($Pcross);
-    echo "<br><br>Pmut : "; print_r($Pmut);
-    echo "<br><br>Offs : "; print_r($Offs);
-    echo "<br><br>Offs : "; print_r($Offs[$maxgen-1]);
-    print_r($Err);
-    echo "</pre>";*/
 
     $hasil_temp = $Offs[$maxgen-1];
     usort($hasil_temp, function($a, $b) { return $a['mapee'] <=> $b['mapee']; });
@@ -167,17 +116,18 @@ class PenjMinggu extends Model
     $data = [];
 
     for($i=0; $i<count($data_p); $i++){
-      $label[$i] = $this->month_by_int($data_p[$i]['bulan'])." ".substr((string) $data_p[$i]['tahun'], -2);
+      $label[$i] = $this->week_to_date($data_p[$i]['tahun'], $data_p[$i]['minggu']);
       if(($i+1) == count($data_p)){
+        $j_ming = $this->get_sum_week($data_p[$i]['tahun']);
         for($j=1; $j<=$res_leng; $j++){
-          $bln = $data_p[$i]['bulan']+$j;
+          $ming = $data_p[$i]['minggu']+$j;
           $thn = $data_p[$i]['tahun'];
-          if($data_p[$i]['bulan']+$j > 12){
-            $bln = $data_p[$i]['bulan']+$j-12;
+          if($data_p[$i]['minggu']+$j > $j_ming){
+            $ming = $data_p[$i]['minggu']+$j - $j_ming;
             $thn++;
           }
           
-          $label[$i+$j] = $this->month_by_int($bln)." ".substr((string) $thn, -2);
+          $label[$i+$j] = $this->week_to_date($thn, $ming);
         }
       }
 
@@ -187,10 +137,21 @@ class PenjMinggu extends Model
     return array($data, $label);
   }
 
-  function month_by_int($index){
-    $index -= 1;
-    $month = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep','Okt', 'Nov', 'Des'];
-    return $month[$index];
+  public function week_to_date($year, $week){
+    $time = strtotime("1 January $year", time());
+    $day = date('w', $time);
+    $time += ((7*$week)+1-$day)*24*3600;
+
+    $return[0] = date('j', $time);
+    $time += 6*24*3600;
+    $return[1] = date('j-n-y', $time);
+    
+    return $return[0].' sd '.$return[1];
+  }
+
+  public function get_sum_week($year){
+    $time = strtotime("31 December $year", time());
+    return date('w', $time);
   }
 
   function error_min($error){
