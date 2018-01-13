@@ -5,7 +5,7 @@
   <div class="col-xs-12">
     <div class="card" id="card-daftar">
       <div class="card-header">
-        <h4 class="card-title">Laporan Peramalan per Minggu</h4>
+        <h4 class="card-title">Laporan Peramalan per Hari</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
         <div class="heading-elements">
           <ul class="list-inline mb-0">
@@ -29,7 +29,7 @@
                   <option value="{{ $baris->dibuat }}" {{ $stanggal==$baris->dibuat ? 'selected':''}}>{{ $baris->dibuat }}</option>
                 @endforeach
               </select>
-              <form id="form-tanggal" action="/lapor/minggu" method="GET"></form>
+              <form id="form-tanggal" action="/lapor/hari" method="GET"></form>
               <input type="hidden" id="kd-ramal">
             </div>
             <?php $pesan = (count($dramal)==0 ? 'Pilih <code class="bg-grey bg-lighten-4 grey darken-1">tanggal</code> untuk menampilkan hasil peramalan.'
@@ -58,9 +58,12 @@
                   $fdata = json_decode($dramal[0]->actual);
                   $rleng = count($fdata[1]) - count($fdata[0]);
                   
+                  $a = 0;
                   for($i=count($fdata[1])-$rleng-1; $i<count($fdata[1]); $i++){
-                    echo '<th>'.$fdata[1][$i].'</th>';
-                    array_push($r_col, array('data'=>str_replace(' ', '_', $fdata[1][$i])));
+                    if($a==0){ echo '<th>Actual</th>';
+                    }else{ echo '<th>+'.$a.' hari</th>'; }
+                    
+                    array_push($r_col, array('data'=>$a++));
                   }
                 } ?>
                 <th></th>
@@ -77,7 +80,7 @@
                   $acdata = json_decode($baris->actual);
                   $rmdata = json_decode($baris->ramalan);
                   $ftdata = json_decode($baris->fitness);
-                  echo '<td>'.round($acdata[0][count($acdata[0])-1], 2).'</td>';
+                  echo '<td><b>'.$acdata[1][count($acdata[0])-1]."</b> - ".round($acdata[0][count($acdata[0])-1], 2).'</td>';
                   
                   for($j=count($rmdata)-$rleng; $j<count($rmdata); $j++){
                     echo '<td>'.round($rmdata[$j], 2).'</td>';
@@ -194,7 +197,7 @@
 
   $('#tanggal').change(function() {
     if($(this).val()!==''){
-      $('#form-tanggal').attr('action', '/lapor/minggu/'+$(this).val()+'/');
+      $('#form-tanggal').attr('action', '/lapor/hari/'+$(this).val()+'/');
       $('#form-tanggal').submit();
     }
   });
@@ -230,7 +233,7 @@
     $('#div-mape').html(0);
 
     $('#card-daftar').children('.card-body').collapse('show');
-    $('#card-daftar .card-title').html('Peramalan per Minggu');
+    $('#card-daftar .card-title').html('Peramalan per Hari');
     $('#card-daftar .card-header .back').hide();
     $('#card-daftar .card-header .pdf').fadeIn('fast');
     $('#card-daftar .card-header .excel').fadeIn('fast');
@@ -240,10 +243,10 @@
 
   function cetakLap(kd=-1){
     if($('#card-daftar .card-header .back').is(":visible") || kd>-1){
-      $('#form-tanggal').attr('action', '/lapor/cetak_dminggu/'+(kd==-1 ? $('#kd-ramal').val(): kd)+'/');
+      $('#form-tanggal').attr('action', '/lapor/cetak_dhari/'+(kd==-1 ? $('#kd-ramal').val(): kd)+'/');
       $('#form-tanggal').submit();
     }else{
-      $('#form-tanggal').attr('action', '/lapor/cetak_minggu/{{ $stanggal }}/');
+      $('#form-tanggal').attr('action', '/lapor/cetak_hari/{{ $stanggal }}/');
       $('#form-tanggal').submit();
     }
   }
@@ -312,7 +315,7 @@
       },
       title: {
         display: true,
-        text: 'Ramalan Mingguan'
+        text: 'Ramalan Harian'
       }
     };
 

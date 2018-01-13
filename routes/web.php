@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/jadwal/simpan', 'JadwalController@simpan')->name('simpan_jadwal');
   Route::post('/jadwal/hapus', 'JadwalController@hapus')->name('hapus_jadwal');
 
+  Route::get('/savety', 'SavetyController@index')->name('savety');
+
   Route::get('/ramal/bulan', 'RamalBulanController@index')->name('ramal_bulan');
   Route::post('/ramal/bulan/cari_produk', 'RamalBulanController@cari_produk')->name('rb_cari_produk');
   Route::post('/ramal/bulan/ambil_penjualan', 'RamalBulanController@ambil_penjualan')->name('ambil_penjualan');
@@ -42,13 +44,22 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/ramal/bulan/test_proses', 'RamalBulanController@test_proses')->name('test_proses');
 
   Route::get('/ramal/minggu', 'RamalMingguController@index')->name('ramal_minggu');
-  Route::post('/ramal/minggu/simpan_ramal', 'RamalMingguController@simpan_ramal')->name('simpan_ramal_ming');
   Route::post('/ramal/minggu/ambil_penjualan_min', 'RamalMingguController@ambil_penjualan_min')->name('ambil_penjualan_ming_min');
+  Route::post('/ramal/minggu/simpan_ramal', 'RamalMingguController@simpan_ramal')->name('simpan_ramal_ming');
   
   Route::get('/lapor/minggu', 'LaporanController@minggu')->name('lapor_minggu');
   Route::get('/lapor/minggu/{tanggal}/', 'LaporanController@minggu')->name('lapor_minggu_by');
   Route::get('/lapor/cetak_dminggu/{kd}/', 'LaporanController@cetak_det_minggu')->name('cetak_det_minggu');    
   Route::get('/lapor/cetak_minggu/{tanggal}/', 'LaporanController@cetak_minggu')->name('cetak_minggu');
+
+  Route::get('/ramal/hari', 'RamalHariController@index')->name('ramal_hari');
+  Route::post('/ramal/hari/ambil_penjualan_min', 'RamalHariController@ambil_penjualan_min')->name('ambil_penjualan_hari_min');
+  Route::post('/ramal/hari/simpan_ramal', 'RamalHariController@simpan_ramal')->name('simpan_ramal_hari');
+
+  Route::get('/lapor/hari', 'LaporanController@hari')->name('lapor_hari');
+  Route::get('/lapor/hari/{tanggal}/', 'LaporanController@hari')->name('lapor_hari_by');
+  Route::get('/lapor/cetak_dhari/{kd}/', 'LaporanController@cetak_det_hari')->name('cetak_det_hari');
+  Route::get('/lapor/cetak_hari/{tanggal}/', 'LaporanController@cetak_hari')->name('cetak_hari');
 });
 
 Auth::routes();

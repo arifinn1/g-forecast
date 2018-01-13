@@ -69,6 +69,21 @@ class Produk extends Model
         ->groupBy('f.kd_prod')
         ->havingRaw('COUNT(f.kd_f) > 1')
         ->get();
+    }elseif($periode=="hari"){
+      $data_t = DB::table("f_penj_hari as f")
+        ->select(DB::raw("DATE_ADD(MAX(tgl), INTERVAL -1 MONTH) AS last_period"))
+        ->first();
+      
+      $data = DB::table("f_penj_hari as f")
+        ->select(DB::raw("p.kd_prod, p.nm_db, COUNT(f.kd_f)AS panjang"))
+        ->leftJoin('d_prod as p', 'f.kd_prod', '=', 'p.kd_prod')
+        ->whereIn('f.kd_prod',function($query) use ($data_t){
+            $query->select('kd_prod')->from('f_penj_ming')
+            ->whereRaw("tgl>='".$data_t->last_period."'");
+          })
+        ->groupBy('f.kd_prod')
+        ->havingRaw('COUNT(f.kd_f) > 1')
+        ->get();
     }
 
     return $data;

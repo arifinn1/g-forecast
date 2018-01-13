@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\RamalMinggu;
 use App\Produk;
 use App\PenjMinggu;
-use Session;
-use Response;
 
 class RamalMingguController extends Controller
 {
