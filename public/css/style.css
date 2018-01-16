@@ -43,6 +43,13 @@ form .text-info {
   margin: 0px;
 }
 
+.no-wrap {
+  white-space: nowrap;
+  width: 100%;
+  overflow-x: hidden;
+  margin-bottom: 0px;
+}
+
 .margin-b-10 { margin-bottom: 10px; }
 .margin-b-15 { margin-bottom: 15px; }
 

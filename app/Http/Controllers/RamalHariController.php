@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\RamalHari;
 use App\Produk;
 use App\PenjHari;
+use App\Safety;
 
 class RamalHariController extends Controller
 {
@@ -28,7 +29,11 @@ class RamalHariController extends Controller
     $penjhari = new PenjHari();
     $data = $penjhari->ambil_penjualan($request->input('kd_prod'));
     $data = array_slice(json_decode(json_encode($data), true), -150);
-    echo $penjhari->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data);
+    
+    $safety = new Safety();
+    $safety_stock = $safety->calc_safety_stock_adv('hari', $request->input('kd_prod'));
+
+    echo $penjhari->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
   }
 
   public function simpan_ramal(Request $request)

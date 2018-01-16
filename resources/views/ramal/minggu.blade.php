@@ -76,7 +76,7 @@
       <div class="card"><div class="card-body">
         <div class="card-block pad-less">
           <div class="media">
-            <div class="media-body text-xs-left"><h3 class="deep-orange" id="div-gen">0</h3><span>Generasi</span></div>
+            <div class="media-body text-xs-left"><h3 class="deep-orange" id="div-gen">0 - 0</h3><span>Generasi - Safety Stock</span></div>
             <div class="media-right media-middle"><i class="icon-share4 deep-orange font-large-2 float-xs-right"></i></div>
           </div>
         </div>
@@ -323,7 +323,7 @@
   function lihatRamal(index){
     if(ramal_list.length==0){
       if(all_suc>0){
-        $('#div-gen').html(hasil[index][3]);
+        $('#div-gen').html(hasil[index][3]+" - "+parseFloat(hasil[index][10]).toFixed(2));
         $('#div-alp').html(parseFloat(hasil[index][4]).toFixed(8));
         $('#div-gam').html(parseFloat(hasil[index][5]).toFixed(8));
         $('#div-mape').html(parseFloat(hasil[index][6]).toFixed(8));

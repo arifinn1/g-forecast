@@ -29,6 +29,7 @@
           <th>#</th>
           <th>Produk</th>
           <th>MAPE</th>
+          <th>Safety Stock</th>
           <?php $r_col = [];
             if(count($dramal)>0){
             $fdata = json_decode($dramal[0]->actual);
@@ -48,6 +49,7 @@
           <td><?php echo ++$i; ?></td>
           <td>{{ $baris->nm_db }}</td>
           <td>{{ round($baris->mape, 8) }}</td>
+          <td>{{ round($baris->safety_stock, 2) }}</td>
           <?php
             $acdata = json_decode($baris->actual);
             $rmdata = json_decode($baris->ramalan);

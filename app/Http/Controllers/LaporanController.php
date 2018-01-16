@@ -14,6 +14,7 @@ class LaporanController extends Controller
     $ramalbulan = new RamalBulan();
 
     $data = [];
+    $data['page'] = 'lap_bulan';
     $data['chart'] = true;
     $data['datatables'] = true;
     //$data['$ex_pdf'] = true;
@@ -31,6 +32,7 @@ class LaporanController extends Controller
     $ramalminggu = new RamalMinggu();
 
     $data = [];
+    $data['page'] = 'lap_ming';
     $data['chart'] = true;
     $data['datatables'] = true;
     $data['title'] = 'Laporan Mingguan - Genetic Forecast';
@@ -47,6 +49,7 @@ class LaporanController extends Controller
     $ramalhari = new RamalHari();
 
     $data = [];
+    $data['page'] = 'lap_hari';
     $data['chart'] = true;
     $data['datatables'] = true;
     $data['title'] = 'Laporan Harian - Genetic Forecast';

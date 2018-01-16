@@ -26,7 +26,9 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/jadwal/simpan', 'JadwalController@simpan')->name('simpan_jadwal');
   Route::post('/jadwal/hapus', 'JadwalController@hapus')->name('hapus_jadwal');
 
-  Route::get('/savety', 'SavetyController@index')->name('savety');
+  Route::get('/safety', 'SafetyController@index')->name('safety');
+  Route::post('/safety/simpan', 'SafetyController@simpan')->name('simpan_safety');
+  Route::post('/safety/hapus', 'SafetyController@hapus')->name('hapus_safety');
 
   Route::get('/ramal/bulan', 'RamalBulanController@index')->name('ramal_bulan');
   Route::post('/ramal/bulan/cari_produk', 'RamalBulanController@cari_produk')->name('rb_cari_produk');

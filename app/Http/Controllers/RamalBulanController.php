@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\RamalBulan;
 use App\Produk;
 use App\PenjBulan;
+use App\Safety;
 use Session;
 use Response;
 
@@ -44,7 +45,11 @@ class RamalBulanController extends Controller
       $penjbulan = new PenjBulan();
       $data = $penjbulan->ambil_penjualan($request->input('kd_prod'));
       $data = json_decode(json_encode($data), true);
-      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data);
+      
+      $safety = new Safety();
+      $safety_stock = $safety->calc_safety_stock_adv('bulan', $request->input('kd_prod'));
+
+      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
     }
 
     public function simpan_ramal(Request $request)

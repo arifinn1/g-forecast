@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\RamalMinggu;
 use App\Produk;
 use App\PenjMinggu;
+use App\Safety;
 
 class RamalMingguController extends Controller
 {
@@ -28,7 +29,11 @@ class RamalMingguController extends Controller
     $penjminggu = new PenjMinggu();
     $data = $penjminggu->ambil_penjualan($request->input('kd_prod'));
     $data = json_decode(json_encode($data), true);
-    echo $penjminggu->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data);
+    
+    $safety = new Safety();
+    $safety_stock = $safety->calc_safety_stock_adv('ming', $request->input('kd_prod'));
+
+    echo $penjminggu->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
   }
 
   public function simpan_ramal(Request $request)

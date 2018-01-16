@@ -31,6 +31,8 @@
         <dd class="col-xs-8">{{ $rleng }} Minggu</dd>
         <dt class="col-xs-4">Generasi</dt>
         <dd class="col-xs-8">{{ $edata[1][count($edata[1])-1] }}</dd>
+        <dt class="col-xs-4">Safety Stock</dt>
+        <dd class="col-xs-8">{{ $dramal[0]->safety_stock }}</dd>
         <dt class="col-xs-4">Alpha, Gamma</dt>
         <dd class="col-xs-8">{{ $dramal[0]->alpha.", ".$dramal[0]->gamma }}</dd>
         <dt class="col-xs-4">MAPE, MSE</dt>

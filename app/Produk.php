@@ -36,6 +36,16 @@ class Produk extends Model
     return $data;
   }
 
+  public function tampil_produk_safety()
+  {
+    $data = DB::table("d_prod")
+      ->select(DB::raw("*, 90 AS serv_level"))
+      ->orderByRaw('kd_prod ASC')
+      ->get();
+    
+    return $data;
+  }
+
   public function tampil_produk_last($periode)
   {
     $data = NULL;

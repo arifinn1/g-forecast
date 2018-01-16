@@ -200,7 +200,7 @@
 
     <!-- main menu-->
     <div data-scroll-to-active="true" class="main-menu menu-fixed menu-light menu-accordion menu-shadow">
-
+        <?php if(!isset($page)){ $page = ''; } ?>
         <!-- main menu content-->
         <div class="main-menu-content">
             <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
@@ -217,10 +217,10 @@
                         <li><a href="layout-light.html" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="icon-clock-o"></i><span class="menu-title">Jadwal dan Savety Stock</span></a>
+                <li class=" nav-item"><a href="#"><i class="icon-clock-o"></i><span class="menu-title">Parameter</span></a>
                     <ul class="menu-content">
                         <li class="{{ Request::path() == 'jadwal' ? 'active' : '' }}"><a href="{{ route('jadwal') }}" class="menu-item">Jadwal Kalkulasi</a></li>
-                        <li class="{{ Request::path() == 'savety' ? 'active' : '' }}"><a href="{{ route('savety') }}" class="menu-item">Savety Stock</a></li>
+                        <li class="{{ Request::path() == 'safety' ? 'active' : '' }}"><a href="{{ route('safety') }}" class="menu-item">Safety Stock</a></li>
                     </ul>
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-sun-o"></i><span class="menu-title">Peramalan</span></a>
@@ -232,9 +232,9 @@
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-file-text3"></i><span class="menu-title">Laporan</span></a>
                     <ul class="menu-content">
-                        <li class="{{ Request::path() == 'lapor/hari' ? 'active' : '' }}"><a href="{{ route('lapor_hari') }}" class="menu-item">Harian</a></li>
-                        <li class="{{ Request::path() == 'lapor/minggu' ? 'active' : '' }}"><a href="{{ route('lapor_minggu') }}" class="menu-item">Mingguan</a></li>
-                        <li class="{{ Request::path() == 'lapor/bulan' ? 'active' : '' }}"><a href="{{ route('lapor_bulan') }}" class="menu-item">Bulanan</a></li>
+                        <li class="{{ Request::path() == 'lapor/hari' || $page == 'lap_hari' ? 'active' : '' }}"><a href="{{ route('lapor_hari') }}" class="menu-item">Harian</a></li>
+                        <li class="{{ Request::path() == 'lapor/minggu' || $page == 'lap_ming' ? 'active' : '' }}"><a href="{{ route('lapor_minggu') }}" class="menu-item">Mingguan</a></li>
+                        <li class="{{ Request::path() == 'lapor/bulan' || $page == 'lap_bulan' ? 'active' : '' }}"><a href="{{ route('lapor_bulan') }}" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-shopping-basket"></i><span class="menu-title">Rencana Pembelian</span></a>

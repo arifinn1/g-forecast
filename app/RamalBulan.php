@@ -18,7 +18,7 @@ class RamalBulan extends Model
 
       for($i=0; $i<count($data); $i++){
         if(count($data[$i])>0){
-          $ins[] = ['kd_prod' => $data[$i][8], 'dibuat' => `'`.$datetime.`'`, 'panjang'=> $data[$i][9], 'alpha' => $data[$i][4], 'gamma' => $data[$i][5], 'mape' => $data[$i][6], 'mse' => $data[$i][7], 'actual' => `'`.$data[$i][0].`'`, 'ramalan' => `'`.$data[$i][1].`'`, 'fitness' => `'`.$data[$i][2].`'`];
+          $ins[] = ['kd_prod' => $data[$i][8], 'dibuat' => `'`.$datetime.`'`, 'panjang'=> $data[$i][9], 'alpha' => $data[$i][4], 'gamma' => $data[$i][5], 'mape' => $data[$i][6], 'mse' => $data[$i][7], 'actual' => `'`.$data[$i][0].`'`, 'ramalan' => `'`.$data[$i][1].`'`, 'fitness' => `'`.$data[$i][2].`'`, 'safety_stock' => $data[$i][10]];
         }
       }
       $ins = array_chunk($ins, 40);
@@ -44,7 +44,7 @@ class RamalBulan extends Model
     public function tampil_data_ramal($tanggal)
     {
       $data = DB::table("ramal_bulan as r")
-        ->select(DB::raw("r.kd, r.kd_prod, r.dibuat, p.nm_db, p.satuan, r.alpha, r.gamma, r.mape, r.actual, r.ramalan, r.fitness"))
+        ->select(DB::raw("r.kd, r.kd_prod, r.dibuat, p.nm_db, p.satuan, r.alpha, r.gamma, r.mape, r.actual, r.ramalan, r.fitness, r.safety_stock"))
         ->leftJoin('d_prod as p', 'r.kd_prod', '=', 'p.kd_prod')
         ->where('r.dibuat', $tanggal)
         ->get();
@@ -55,7 +55,7 @@ class RamalBulan extends Model
     public function tampil_det_ramal_by($kd)
     {
       $data = DB::table("ramal_bulan as r")
-        ->select(DB::raw("r.kd_prod, r.dibuat, p.nm_db, p.satuan, r.alpha, r.gamma, r.mape, r.mse, r.actual, r.ramalan, r.fitness"))
+        ->select(DB::raw("r.kd_prod, r.dibuat, p.nm_db, p.satuan, r.alpha, r.gamma, r.mape, r.mse, r.actual, r.ramalan, r.fitness, r.safety_stock"))
         ->leftJoin('d_prod as p', 'r.kd_prod', '=', 'p.kd_prod')
         ->where('r.kd', $kd)
         ->get();

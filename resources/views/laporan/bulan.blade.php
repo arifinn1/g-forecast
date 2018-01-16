@@ -53,6 +53,7 @@
                 <th>#</th>
                 <th>Produk</th>
                 <th>MAPE</th>
+                <th>Safety Stock</th>
                 <?php $r_col = [];
                   if(count($dramal)>0){
                   $fdata = json_decode($dramal[0]->actual);
@@ -73,6 +74,7 @@
                 <td><?php echo ++$i; ?></td>
                 <td>{{ $baris->nm_db }}</td>
                 <td>{{ round($baris->mape, 8) }}</td>
+                <td>{{ round($baris->safety_stock, 2) }}</td>
                 <?php
                   $acdata = json_decode($baris->actual);
                   $rmdata = json_decode($baris->ramalan);
@@ -87,7 +89,7 @@
                 ?>
                 <td class="text-center">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-secondary" onclick="lihatRamal({{ $baris->kd }}, `{{ $i }}. {{ $baris->nm_db }}`, {{ $baris->alpha }}, {{ $baris->gamma }}, {{ $baris->mape }}, {{ $acdata }}, {{ $baris->ramalan }}, {{ $baris->fitness }})"><i class="icon-area-chart"></i></button>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="lihatRamal({{ $baris->kd }}, `{{ $i }}. {{ $baris->nm_db }}`, {{ $baris->alpha }}, {{ $baris->gamma }}, {{ $baris->mape }}, {{ $acdata }}, {{ $baris->ramalan }}, {{ $baris->fitness }}, {{ $baris->safety_stock }})"><i class="icon-area-chart"></i></button>
                     <button type="button" class="btn btn-sm btn-info" onclick="cetakLap({{ $baris->kd }})"><i class="icon-print"></i></button>
                   </div>
                 </td>
@@ -107,7 +109,7 @@
       <div class="card"><div class="card-body">
         <div class="card-block pad-less">
           <div class="media">
-            <div class="media-body text-xs-left"><h3 class="deep-orange" id="div-gen">0</h3><span>Generasi</span></div>
+            <div class="media-body text-xs-left"><h3 class="deep-orange" id="div-gen">0 - 0</h3><span>Generasi - Safety Stock</span></div>
             <div class="media-right media-middle"><i class="icon-share4 deep-orange font-large-2 float-xs-right"></i></div>
           </div>
         </div>
@@ -181,6 +183,7 @@
       { "data": "urut" },
       { "data": "nama" },
       { "data": "mape" },
+      { "data": "safety_stock" },
     ];
     col = col.concat(JSON.parse(`<?php echo json_encode($r_col); ?>`), { "data": "tombol", "className": "text-center", "orderable": false });
 
@@ -199,9 +202,9 @@
     }
   });
 
-  function lihatRamal(kd, title, alp, gam, mape, actual, ramalan, fitness){
+  function lihatRamal(kd, title, alp, gam, mape, actual, ramalan, fitness, safety_stock){
     $('#kd-ramal').val(kd);
-    $('#div-gen').html(fitness[1][(fitness[1]).length - 1]);
+    $('#div-gen').html(fitness[1][(fitness[1]).length - 1] +" - "+ parseFloat(safety_stock).toFixed(2));
     $('#div-alp').html(parseFloat(alp).toFixed(8));
     $('#div-gam').html(parseFloat(gam).toFixed(8));
     $('#div-mape').html(parseFloat(mape).toFixed(8));
