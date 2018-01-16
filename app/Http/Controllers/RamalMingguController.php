@@ -19,6 +19,7 @@ class RamalMingguController extends Controller
     $data['chart'] = true;
     $data['title'] = 'Ramal Minggu - Genetic Forecast';
     $data['nama'] = $request->session()->get('nama');
+    $data['posisi'] = $request->session()->get('posisi');
     $data['produk'] = $produk->tampil_produk_last('ming');
 
     return view('ramal/minggu', $data);

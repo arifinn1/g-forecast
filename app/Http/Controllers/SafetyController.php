@@ -19,6 +19,7 @@ class SafetyController extends Controller
     $data['datetimepicker'] = true;
     $data['title'] = 'Parameter Safety - Genetic Forecast';
     $data['nama'] = $request->session()->get('nama');
+    $data['posisi'] = $request->session()->get('posisi');
 
     return view('safety/lihat', $data);
   }

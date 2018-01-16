@@ -16,6 +16,7 @@ class JadwalController extends Controller
     $data['datetimepicker'] = true;
     $data['title'] = 'Jadwal - Genetic Forecast';
     $data['nama'] = $request->session()->get('nama');
+    $data['posisi'] = $request->session()->get('posisi');
 
     return view('jadwal/lihat', $data);
   }

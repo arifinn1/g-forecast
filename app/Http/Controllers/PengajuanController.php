@@ -21,6 +21,7 @@ class PengajuanController extends Controller
     $data['datetimepicker'] = true;
     $data['title'] = 'Rencana Pembelian - Genetic Forecast';
     $data['nama'] = $request->session()->get('nama');
+    $data['posisi'] = $request->session()->get('posisi');
 
     return view('pengajuan/lihat', $data);
   }
