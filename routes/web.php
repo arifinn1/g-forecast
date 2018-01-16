@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/lapor/hari/{tanggal}/', 'LaporanController@hari')->name('lapor_hari_by');
   Route::get('/lapor/cetak_dhari/{kd}/', 'LaporanController@cetak_det_hari')->name('cetak_det_hari');
   Route::get('/lapor/cetak_hari/{tanggal}/', 'LaporanController@cetak_hari')->name('cetak_hari');
+  
+  Route::get('/pengajuan', 'PengajuanController@index')->name('pengajuan');
 });
 
 Auth::routes();

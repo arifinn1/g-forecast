@@ -24,6 +24,31 @@ class Produk extends Model
     return $data;
   }
 
+  public function tampil_semua()
+  {
+    /* SELECT pd.produk_id, p.nama, p.dus, sum(case when pd.satuan<=1 and p.dus>1 then km.jmlbrg/p.dus else km.jmlbrg end) as jumlah FROM produk_diorder pd, 
+    (SELECT l.* FROM suratjalan s, logsrj l WHERE s.id=l.idsrj AND s.date>='2017-03-01') km, produk p 
+    WHERE pd.id=km.idbrg and pd.produk_id=p.id group by pd.produk_id
+
+    select m_p.id, m_p.nama, m_p.dus, ifnull(m_s.jumlah,0)as jumlah from produk m_p left join (SELECT pd.produk_id, sum(case when pd.satuan<=1 and 
+    p.dus>1 then km.jmlbrg/p.dus else km.jmlbrg end) as jumlah FROM produk_diorder pd, (SELECT l.* FROM suratjalan s, logsrj l WHERE s.id=l.idsrj 
+    AND s.date>='2017-03-01') km, produk p 
+    WHERE pd.id=km.idbrg and pd.produk_id=p.id group by pd.produk_id) m_s on(m_p.id=m_s.produk_id)
+     */
+
+    $data = DB::table("pelumas.produk as m_p")
+      ->select(DB::raw("m_p.id, m_p.nama, m_p.dus, ifnull(m_s.jumlah,0)as jumlah"))
+      ->leftJoin(DB::raw("(select pd.produk_id, sum(case when pd.satuan<=1 and p.dus>1 then km.jmlbrg/p.dus else km.jmlbrg end) as jumlah 
+          from pelumas.produk_diorder pd, (select l.* from pelumas.suratjalan s, pelumas.logsrj l where s.id=l.idsrj and 
+          s.date>='2017-03-01') km, pelumas.produk p where pd.id=km.idbrg and pd.produk_id=p.id group by pd.produk_id) m_s"), function($join) {
+        $join->on('m_p.id', '=', 'm_s.produk_id');
+      })
+      ->orderByRaw('m_p.id ASC')
+      ->get();
+    
+    return $data;
+  }
+
   public function tampil_produk($periode)
   {
     $data = DB::table("f_penj_$periode as f")

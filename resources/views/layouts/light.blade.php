@@ -239,8 +239,8 @@
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon-shopping-basket"></i><span class="menu-title">Rencana Pembelian</span></a>
                     <ul class="menu-content">
-                        <li><a href="card-statistics.html" class="menu-item">Pengajuan</a></li>
-                        <li><a href="card-charts.html" class="menu-item">Persetujuan</a></li>
+                        <li class="{{ Request::path() == 'pengajuan' ? 'active' : '' }}"><a href="{{ route('pengajuan') }}" class="menu-item">Pengajuan</a></li>
+                        <li><a href="card-statistics.html" class="menu-item">Persetujuan</a></li>
                     </ul>
                 </li>
                 <li class="{{ Request::path() == 'akun/ganti_pass' ? 'active' : '' }}"><a href="{{ route('ganti_pass') }}"><i class="icon-key3"></i><span class="menu-title">Ubah Password</span></a></li>

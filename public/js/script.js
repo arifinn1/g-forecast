@@ -74,3 +74,11 @@ function msToTime(duration) {
   
   return (hours>0? hours+" jam ":"")+(minutes>0? minutes+" menit ":"")+(seconds>0? seconds+" detik":"");
 }
+
+function ucwords(kalimat) {
+  kalimat = kalimat.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+    return letter.toUpperCase();
+  });
+
+  return kalimat;
+}
