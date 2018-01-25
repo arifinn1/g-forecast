@@ -11,14 +11,27 @@ class RamalHari extends Model
   protected $primaryKey = 'kd';
   public $timestamps = false;
 
-  public function simpan($data)
+  public function simpan($data, $res_leng = 4)
   {
     $datetime = date("Y-m-d H:i:s");
     $ins = [];
 
     for($i=0; $i<count($data); $i++){
       if(count($data[$i])>0){
-        $ins[] = ['kd_prod' => $data[$i][8], 'dibuat' => `'`.$datetime.`'`, 'panjang'=> $data[$i][9], 'alpha' => $data[$i][4], 'gamma' => $data[$i][5], 'mape' => $data[$i][6], 'mse' => $data[$i][7], 'actual' => `'`.$data[$i][0].`'`, 'ramalan' => `'`.$data[$i][1].`'`, 'fitness' => `'`.$data[$i][2].`'`, 'safety_stock' => $data[$i][10]];
+        $ins[] = ['kd_prod' => $data[$i][8], 
+          'dibuat' => `'`.$datetime.`'`, 
+          'panjang'=> $data[$i][9], 
+          'alpha' => $data[$i][4], 
+          'gamma' => $data[$i][5], 
+          'mape' => $data[$i][6], 
+          'mse' => $data[$i][7], 
+          'actual' => `'`.$data[$i][0].`'`, 
+          'ramalan' => `'`.$data[$i][1].`'`, 
+          'fitness' => `'`.$data[$i][2].`'`, 
+          'safety_stock' => $data[$i][10],
+          'r_awal' => $data[$i][11],
+          'r_jumlah' => $res_leng
+        ];
       }
     }
     $ins = array_chunk($ins, 40);

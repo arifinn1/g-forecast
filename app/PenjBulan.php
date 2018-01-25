@@ -22,6 +22,36 @@ class PenjBulan extends Model
     return $data;
   }
 
+  public function import($tgl_awal){
+    $data = DB::table('f_penj_hari')
+      ->select(DB::raw('kd_prod, year(tgl) as tahun, month(tgl) as bulan, sum(jumlah) as jumlah'))
+      ->whereRaw("tgl>='".$tgl_awal."'")
+      ->groupBy(DB::raw("kd_prod, DATE_FORMAT(tgl, '%Y-%m')"))
+      ->get();
+    
+    $ins = [];
+    foreach( $data as $baris ){
+      $ins[] = [
+        'tahun' => $baris->tahun,
+        'bulan' => $baris->bulan,
+        'kd_prod' => $baris->kd_prod,
+        'jumlah' => $baris->jumlah
+      ];
+    }
+
+    DB::table('f_penj_bulan')->whereRaw("CONCAT(tahun,'-',LPAD(bulan,2,'0')) = DATE_FORMAT('$tgl_awal', '%Y-%m')")->delete();
+
+    $ins = array_chunk($ins, 50);
+    $insert = 0;
+    for($i=0; $i<count($ins); $i++){
+      if(DB::table('f_penj_bulan')->insert($ins[$i])){
+        $insert++;
+      }
+    }
+
+    return floor(($insert/count($ins))*100);
+  }
+
   public function resolve_missing_val($data)
   {
     $bln_awal = $data[0]['bulan'];

@@ -34,7 +34,21 @@ class RamalMingguController extends Controller
     $safety = new Safety();
     $safety_stock = $safety->calc_safety_stock_adv('ming', $request->input('kd_prod'));
 
-    echo $penjminggu->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
+    echo $penjminggu->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock."||".$this->get_r_awal($data[count($data)-1]['tahun'], $data[count($data)-1]['minggu']);
+  }
+
+  public function get_r_awal($year, $week)
+  {
+    if($week==52){
+      $year++;
+      $week = 1;
+    }else{ $week++; }
+
+    $time = strtotime("1 January $year", time());
+    $day = date('w', $time);
+    $time += ((7*($week-1))+1-$day)*24*3600;
+
+    return date('Y-m-d', $time).'||'.$week;
   }
 
   public function simpan_ramal(Request $request)

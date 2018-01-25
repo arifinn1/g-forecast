@@ -22,6 +22,36 @@ class PenjMinggu extends Model
     return $data;
   }
 
+  public function import($tgl_awal){
+    $data = DB::table('f_penj_hari')
+      ->select(DB::raw('kd_prod, year(tgl) as tahun, week(tgl) as minggu, sum(jumlah) as jumlah'))
+      ->whereRaw("tgl>='".$tgl_awal."'")
+      ->groupBy(DB::raw("kd_prod, yearweek(tgl)"))
+      ->get();
+    
+    $ins = [];
+    foreach( $data as $baris ){
+      $ins[] = [
+        'tahun' => $baris->tahun,
+        'minggu' => $baris->minggu,
+        'kd_prod' => $baris->kd_prod,
+        'jumlah' => $baris->jumlah
+      ];
+    }
+
+    DB::table('f_penj_ming')->whereRaw("concat(tahun,minggu) >= yearweek('$tgl_awal')")->delete();
+
+    $ins = array_chunk($ins, 50);
+    $insert = 0;
+    for($i=0; $i<count($ins); $i++){
+      if(DB::table('f_penj_ming')->insert($ins[$i])){
+        $insert++;
+      }
+    }
+
+    return floor(($insert/count($ins))*100);
+  }
+
   public function operasi_genetika($data, $min, $res_leng = 4)
   {
     $data_penju = [];
@@ -118,12 +148,11 @@ class PenjMinggu extends Model
     for($i=0; $i<count($data_p); $i++){
       $label[$i] = $this->week_to_date($data_p[$i]['tahun'], $data_p[$i]['minggu']);
       if(($i+1) == count($data_p)){
-        $j_ming = $this->get_sum_week($data_p[$i]['tahun']);
         for($j=1; $j<=$res_leng; $j++){
           $ming = $data_p[$i]['minggu']+$j;
           $thn = $data_p[$i]['tahun'];
-          if($data_p[$i]['minggu']+$j > $j_ming){
-            $ming = $data_p[$i]['minggu']+$j - $j_ming;
+          if($data_p[$i]['minggu']+$j > 52){
+            $ming = $ming - 52;
             $thn++;
           }
           
@@ -140,18 +169,13 @@ class PenjMinggu extends Model
   public function week_to_date($year, $week){
     $time = strtotime("1 January $year", time());
     $day = date('w', $time);
-    $time += ((7*$week)+1-$day)*24*3600;
+    $time += ((7*($week-1))+1-$day)*24*3600;
 
     $return[0] = date('j', $time);
     $time += 6*24*3600;
     $return[1] = date('j-n-y', $time);
     
     return $return[0].' sd '.$return[1];
-  }
-
-  public function get_sum_week($year){
-    $time = strtotime("31 December $year", time());
-    return date('w', $time);
   }
 
   function error_min($error){

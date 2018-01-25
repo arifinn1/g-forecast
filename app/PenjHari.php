@@ -21,6 +21,41 @@ class PenjHari extends Model
     return $data;
   }
 
+  public function import($tgl_awal)
+  {
+    //SELECT pd.produk_id, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah FROM pelumas.produk_diorder pd, pelumas.produk p, pelumas.logsrj l, pelumas.suratjalan s WHERE pd.produk_id=p.id AND pd.id=l.idbrg AND l.idsrj=s.id AND l.idcust>100 AND s.date>='".$data_t->tgl."' GROUP BY pd.produk_id
+
+    $data = DB::table('pelumas.produk_diorder as pd')
+      ->select(DB::raw('pd.produk_id, s.date, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah'))
+      ->join('pelumas.produk as p', 'p.id', '=', 'pd.produk_id')
+      ->join('pelumas.logsrj as l', 'l.idbrg', '=', 'pd.id')
+      ->join('pelumas.suratjalan as s', 's.id', '=', 'l.idsrj')
+      ->whereRaw("l.idcust>100 AND s.date>='".$tgl_awal."'")
+      ->groupBy('pd.produk_id', 's.date')
+      ->get();
+    
+    $ins = [];
+    foreach( $data as $baris ){
+      $ins[] = [
+        'tgl' => $baris->date,
+        'kd_prod' => $baris->produk_id,
+        'jumlah' => $baris->jumlah
+      ];
+    }
+
+    DB::table('f_penj_hari')->where('tgl', '>=', $tgl_awal)->delete();
+
+    $ins = array_chunk($ins, 50);
+    $insert = 0;
+    for($i=0; $i<count($ins); $i++){
+      if(DB::table('f_penj_hari')->insert($ins[$i])){
+        $insert++;
+      }
+    }
+
+    return floor(($insert/count($ins))*100);
+  }
+
   public function operasi_genetika($data, $min, $res_leng = 4)
   {
     $data_penju = [];

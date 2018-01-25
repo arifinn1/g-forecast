@@ -29,7 +29,7 @@
                 <th>Status</th>
                 <th>Tgl Update Status</th>
                 <th>Keterangan</th>
-                <th class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="ClearInput('', '{{ $reframal['bulanan'] }}', '{{ $nama }}', '', 'bulanan', new Date(), 'menunggu', true)"><i class="icon-plus3"></i></button></th>
+                <th class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="ClearInput('', '{{ $reframal['bulanan']['dibuat'] }}', '{{ $nama }}', '', 'bulanan', '', 'menunggu', true)"><i class="icon-plus3"></i></button></th>
               </tr>
             </thead>
             <tbody>
@@ -37,12 +37,12 @@
               @foreach( $renbeli as $baris )
               <tr>
                 <td>{{ $baris->kd }}</td>
-                <td>{{ $baris->periode }}</td>
+                <td>{{ ucwords($baris->periode) }}</td>
                 <td>{{ $baris->tgl_periode }}</td>
                 <td>{{ $baris->ref_ramal }}</td>
-                <td>{{ $baris->dibuat_oleh }}</td>
-                <td>{{ $baris->disetujui_oleh }}</td>
-                <td>{{ $baris->status }}</td>
+                <td>{{ $baris->nama_peng }}</td>
+                <td>{{ $baris->nama_acc }}</td>
+                <td>{{ ucwords($baris->status) }}</td>
                 <td>{{ $baris->tgl_status }}</td>
                 <td>{{ $baris->ket }}</td>
                 <td>
@@ -67,19 +67,20 @@
       <div class="card-body collapse in">
         <div class="card-block">
           <div id="alert-input"></div>
-          <form id="form-pengajuan" class="form" method="post" autocomplete="off" onsubmit="return Simpan()">
+          <form id="form-pengajuan" class="form" method="post" autocomplete="off" action="/pengajuan/simpan">
             {{ csrf_field() }}
             <div class="form-body overflow-none">
               <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label for="nama">Dibuat Oleh</label>
                     <input type="hidden" id="kd" name="kd" value="">
+                    <input type="hidden" id="r_data" name="r_data" value="">
                     <div class="text-info" id="dibuat_oleh_txt">{{ $nama }}</div>
                   </div>
                 </div>
               
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label for="ref_ramal">Referensi Peramalan</label>
                     <input type="hidden" id="ref_ramal" name="ref_ramal">
@@ -87,7 +88,19 @@
                   </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="status">Status</label>
+                    <!--<select id="status" name="status" class="form-control">
+                      <option value="disetujui">Disetujui</option>
+                      <option value="ditolak">Ditolak</option>
+                      <option value="menunggu">Menunggu</option>
+                    </select>-->
+                    <div class="text-info" id="status_txt"></div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label for="disetujui_oleh">Disetujui Oleh</label>
                     <div class="text-info" id="disetujui_oleh_txt"></div>
@@ -96,52 +109,39 @@
               </div>
               
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <div class="form-group">
                     <label for="periode">Periode</label>
                     <select id="periode" name="periode" class="form-control" required>
                       <option value="">Pilih</option>
-                      <option value="harian">Harian</option>
                       <option value="mingguan">Mingguan</option>
                       <option value="bulanan">Bulanan</option>
                     </select>
                   </div>
-                </div>
-
-                <div class="col-sm-6">
+                  
                   <div class="form-group">
                     <label for="tgl_periode">Tanggal Periode</label>
-                    <div class="input-group date" id="tgl_periode">
+                    <div class="text-info" id="tgl_periode_txt"></div>
+                    <input type="hidden" id="tgl_periode" name="tgl_periode">
+                    <!--<div class="input-group date" id="tgl_periode">
                       <input type="text" class="form-control" name="tgl_periode" readonly/>
                       <span class="input-group-addon">
                         <span class="icon-calendar4"></span>
                       </span>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
 
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" name="status" class="form-control">
-                      <option value="disetujui">Disetujui</option>
-                      <option value="ditolak">Ditolak</option>
-                      <option value="menunggu">Menunggu</option>
-                    </select>
-                    <div class="text-info" id="status_txt"></div>
-                  </div>
-                </div>
-
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <div class="form-group">
                     <label for="ket">Keterangan</label>
-                    <textarea id="ket" rows="5" class="form-control" name="ket" placeholder="Keterangan"></textarea>
+                    <textarea id="ket" rows="6" class="form-control" name="ket" placeholder="Keterangan"></textarea>
                   </div>
                 </div>
               </div>
             </div>
             <div class="form-actions center">
-              <button type="button" class="btn btn-warning mr-1" onclick="ClearInput('', '{{ $reframal['bulanan'] }}', '{{ $nama }}', '', 'bulanan', new Date(), 'menunggu', false)">
+              <button type="button" class="btn btn-warning mr-1" onclick="ClearInput('', '{{ $reframal['bulanan']['dibuat'] }}', '{{ $nama }}', '', 'bulanan', new Date(), 'menunggu', false)">
                 <i class="icon-cross2"></i> Batal
               </button>
               <button type="submit" class="btn btn-primary">
@@ -169,21 +169,21 @@
               <tbody>
                 <?php $i=0; ?>
                 @foreach( $produk as $baris )
-                <tr id="tr{{ $baris->id }}">
-                  <input type="hidden" id="pers{{ $baris->id }}" name="pers{{ $baris->id }}" value="{{ $baris->jumlah }}">
-                  <input type="hidden" id="ss{{ $baris->id }}" name="ss{{ $baris->id }}" value="">
-                  <input type="hidden" id="pera{{ $baris->id }}" name="pera{{ $baris->id }}" value="">
+                <tr id="tr{{ $baris->kd_prod }}">
+                  <input type="hidden" id="pers{{ $baris->kd_prod }}" value="{{ $baris->jumlah }}">
+                  <input type="hidden" id="ss{{ $baris->kd_prod }}" value="">
+                  <input type="hidden" id="pera{{ $baris->kd_prod }}" value="">
 
                   <td>{{ ++$i }}</td>
-                  <td>{{ $baris->nama }}</td>
-                  <td>{{ $baris->dus }}</td>
+                  <td>{{ $baris->nm_db }}</td>
+                  <td>{{ $baris->satuan }}</td>
                   <td class="persediaan">
-                    {{ $baris->dus > 1 ? intval($baris->jumlah - fmod($baris->jumlah, 1)).' ds'.(fmod($baris->jumlah, 1) > 0.01 ? ', '.round(fmod($baris->jumlah, 1) * $baris->dus).' b':'') : intval($baris->jumlah).' dr' }}
+                    {{ $baris->jumlah }}
                   </td>
-                  <td class="safety"></td>
-                  <td class="peramalan"></td>
-                  <td><input type="number" id="ren{{ $baris->id }}" name="ren{{ $baris->id }}" value=""></td>
-                  <td><input type="number" id="set{{ $baris->id }}" name="set{{ $baris->id }}" value=""></td>
+                  <td class="safety">{{ $baris->s_bulan }}</td>
+                  <td class="peramalan">{{ $baris->r_bulan[0] }}</td>
+                  <td><input type="number" id="ren{{ $baris->kd_prod }}" value=""></td>
+                  <td><!--<input type="number" id="set{{ $baris->kd_prod }}" value="">--><span id="set{{ $baris->kd_prod }}_txt"></span></td>
                 </tr>
                 @endforeach
               </tbody>
@@ -219,7 +219,7 @@
 
     tproduk = $('#tproduk').DataTable();
 
-    $('#tgl_periode').datetimepicker({
+    /*$('#tgl_periode').datetimepicker({
       viewMode: 'days',
       format: 'DD MMM YYYY',
       date: new Date(),
@@ -228,26 +228,50 @@
         previous: "icon-chevron-left2",
         next: "icon-chevron-right2"
       }
-    });
+    });*/
 
     $('#card-pengajuan').hide();
+    ReloadRamal('bulanan');
+  });
+
+  $('#form-pengajuan').submit(function() {
+    if($('periode').val()!=''){
+      $('#r_data').val(JSON.stringify(produk));
+      return true;
+    }else{
+      show_alert("#alert-input","<strong>Peringatan!</strong> Pilih periode ramalan dan isi jumlah rencana pembelian.", "warning");
+      return false;
+    }
+  });
+
+  $("input[id^='ren']").change(function() {
+    var kd_prod = ($(this).attr('id')).substr(3);
+    for(var i=0; i<produk.length; i++){
+      if(produk[i]['kd_prod']==kd_prod){
+        produk[i]['rencana'] = parseInt($(this).val());
+      }
+    }
   });
 
   $('#periode').change(function() {
     if($('#kd').val()==''){
       if($(this).val()!=''){
-        $('#ref_ramal').val(ref_ramal[$(this).val()]);
-        $('#ref_ramal_txt').html(ref_ramal[$(this).val()]);
+        $('#ref_ramal').val(ref_ramal[$(this).val()]['dibuat']);
+        $('#ref_ramal_txt').html(ref_ramal[$(this).val()]['dibuat']);
+        $('#tgl_periode').val(ref_ramal[$(this).val()]['r_awal']);
       }else{
         $('#ref_ramal').val('');
         $('#ref_ramal_txt').html('');
+        $('#tgl_periode').val('');
       }
+      TampilPeriode($(this).val());
     }
+    ReloadRamal($(this).val());
   });
 
   var tpengajuan, tproduk, active_row;
 
-  function ClearInput(kd, ref_ramal, dibuat_oleh, disetujui_oleh, periode, tgl_periode, status, show){
+  function ClearInput(kd, ref_r, dibuat_oleh, disetujui_oleh, periode, tgl_periode, status, show){
     if(show){
       $('#card-pengajuan').show('slow');
       $('#card-tpengajuan').hide('slow');
@@ -258,16 +282,57 @@
 
     $('#kd').val(kd);
     $('#dibuat_oleh_txt').html(dibuat_oleh);
-    $('#ref_ramal').val(ref_ramal);
-    $('#ref_ramal_txt').html(ref_ramal);
+    $('#ref_ramal').val(ref_r);
+    $('#ref_ramal_txt').html(ref_r);
     $('#disetujui_oleh_txt').html(disetujui_oleh);
-
     $('#periode').val(periode);
-    $('#tgl_periode').data("DateTimePicker").date(tgl_periode);
 
-    $('#status').val(status);
+    var r_awal = ref_ramal[periode]['r_awal'];
+    $('#tgl_periode').val(r_awal);
+
+    TampilPeriode(periode);
     $('#status_txt').html(ucwords(status));
     $('#ket').html(ket);
+  }
+
+  function TampilPeriode(periode){
+    if(periode!=''){
+      var r_awal = $('#tgl_periode').val();
+      if(periode=='bulanan'){
+        r_awal = dateonly_sql_to_js(r_awal);
+        r_awal = month_by_int(r_awal.getMonth()+1)+" "+r_awal.getFullYear()
+        $('#tgl_periode_txt').html(r_awal);
+      }else{
+        r_awal = dateonly_sql_to_js(r_awal);
+        $('#tgl_periode_txt').html('Minggu ke-'+ref_ramal[periode]['r_ming']+", "+getRangeWeek(ref_ramal[periode]['r_ming'], r_awal.getFullYear()));
+      }
+    }else{
+      $('#tgl_periode_txt').html('');
+    }
+  }
+
+  function ReloadRamal(periode){
+    for(var i=0; i<produk.length; i++){
+      $('#tr'+produk[i]['kd_prod']+' #ren'+produk[i]['kd_prod']).val(0);
+      produk[i]['jumlah'] = parseFloat(produk[i]['jumlah']);
+      if(periode=='bulanan' && produk[i]['s_bulan'] != null){
+        $('#tr'+produk[i]['kd_prod']+' .safety').html(produk[i]['s_bulan']);
+        $('#tr'+produk[i]['kd_prod']+' .peramalan').html(parseFloat(produk[i]['r_bulan'][0]).toFixed(2));
+        if(parseFloat(produk[i]['jumlah'])<produk[i]['r_bulan'][0]){
+          $('#ren'+produk[i]['kd_prod']).val(Math.floor(produk[i]['r_bulan'][0] - produk[i]['jumlah']));
+        }
+      }else if(periode=='mingguan' && produk[i]['s_ming']!=null){
+        $('#tr'+produk[i]['kd_prod']+' .safety').html(produk[i]['s_ming']);
+        $('#tr'+produk[i]['kd_prod']+' .peramalan').html(parseFloat(produk[i]['r_ming'][0]).toFixed(2));
+        if(parseFloat(produk[i]['jumlah'])<produk[i]['r_ming'][0]){
+          $('#ren'+produk[i]['kd_prod']).val(Math.floor(produk[i]['r_ming'][0] - produk[i]['jumlah']));
+        }
+      }else{
+        $('#tr'+produk[i]['kd_prod']+' .safety').html('-');
+        $('#tr'+produk[i]['kd_prod']+' .peramalan').html('-');
+      }
+      produk[i]['rencana'] = parseInt($('#ren'+produk[i]['kd_prod']).val());
+    }
   }
 </script>
 @endsection

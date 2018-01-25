@@ -45,6 +45,12 @@ function month_by_int(index){
   return month[index];
 }
 
+function getRangeWeek(weekNumb, yearNumb) {
+  var beginningOfWeek = moment().year(yearNumb).week(weekNumb).startOf('week');
+  var endOfWeek = moment().year(yearNumb).week(weekNumb).startOf('week').add(7, 'days');
+  return beginningOfWeek.format('D')+' - '+endOfWeek.format('D MMM YYYY');
+}
+
 function dateonly_sql_to_js(date){
 	var d = null;
 	if(date != null){

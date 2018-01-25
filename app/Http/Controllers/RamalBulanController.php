@@ -50,7 +50,16 @@ class RamalBulanController extends Controller
       $safety = new Safety();
       $safety_stock = $safety->calc_safety_stock_adv('bulan', $request->input('kd_prod'));
 
-      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
+      echo $penjbulan->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock."||".$this->get_r_awal($data[count($data)-1]['tahun'], $data[count($data)-1]['bulan']);
+    }
+
+    public function get_r_awal($tahun, $bulan)
+    {
+      if($bulan==12){
+        $tahun++;
+        $bulan = 1;
+      }else{ $bulan++; }
+      return $tahun.'-'.str_pad($bulan, 2, "0", STR_PAD_LEFT)."-01";
     }
 
     public function simpan_ramal(Request $request)

@@ -14,6 +14,9 @@
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/', 'HomeController@index')->name('home');
   Route::get('/home', 'HomeController@index')->name('home');
+  
+  Route::get('/kalkulasi', 'KalkulasiController@index')->name('kalkulasi');
+  Route::post('/kalkulasi/import', 'KalkulasiController@import')->name('kalkulasi_import');
 
   Route::get('/akun', 'AkunController@index')->name('lihat_akun');
   Route::post('/akun/simpan', 'AkunController@simpan')->name('simpan_akun');
@@ -64,6 +67,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/lapor/cetak_hari/{tanggal}/', 'LaporanController@cetak_hari')->name('cetak_hari');
   
   Route::get('/pengajuan', 'PengajuanController@index')->name('pengajuan');
+  Route::post('/pengajuan/simpan', 'PengajuanController@simpan')->name('pengajuan_simpan');
 });
 
 Auth::routes();

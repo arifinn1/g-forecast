@@ -34,7 +34,7 @@ class RamalHariController extends Controller
     $safety = new Safety();
     $safety_stock = $safety->calc_safety_stock_adv('hari', $request->input('kd_prod'));
 
-    echo $penjhari->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock;
+    echo $penjhari->operasi_genetika($data, true)."||".$request->input('kd_prod')."||".count($data)."||".$safety_stock."||".date('Y-m-d', strtotime($data[count($data)-1]['tgl']." +1 days"));
   }
 
   public function simpan_ramal(Request $request)
