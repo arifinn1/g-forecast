@@ -18,8 +18,8 @@ class SafetyController extends Controller
     $data['datatables'] = true;
     $data['datetimepicker'] = true;
     $data['title'] = 'Parameter Safety - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
 
     return view('safety/lihat', $data);
   }
@@ -31,7 +31,7 @@ class SafetyController extends Controller
     $data['berlaku'] =  date("Y-m-d", strtotime($request->input('berlaku')));
     $data['lead_time'] =  $request->input('lead_time');
     $data['serv_level'] = $request->input('sl');
-    $data['dibuat_oleh'] = $request->session()->get('kd');
+    $data['dibuat_oleh'] = $request->session()->get('g_kd');
     
     if($request->input('kd')==''){
       $safety->insert($data);

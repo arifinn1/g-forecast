@@ -12,7 +12,7 @@ class Jadwal extends Model
   public $timestamps = false;
 
   protected $fillable = [
-    'berlaku', 'jam', 'dibuat_oleh'
+    'berlaku', 'jam', 'up_terakhir', 'dibuat_oleh'
   ];
 
   public function ambil_up_terakhir()

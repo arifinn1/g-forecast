@@ -104,4 +104,16 @@ class RenBeli extends Model
 
     return $ret;
   }
+
+  public function tampil_cetak($kd)
+  {
+    $data = DB::table('r_beli as r')
+      ->select(DB::raw('r.*, db.nama as db_nama, ds.nama as ds_nama'))
+      ->join('akun as db', 'db.kd', '=', 'r.dibuat_oleh')
+      ->join('akun as ds', 'ds.kd', '=', 'r.disetujui_oleh')
+      ->where('r.kd', '=', $kd)
+      ->first();
+    
+    return $data;
+  }
 }

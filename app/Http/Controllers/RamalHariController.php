@@ -18,8 +18,8 @@ class RamalHariController extends Controller
     $data['scroll'] = true;
     $data['chart'] = true;
     $data['title'] = 'Ramal Hari - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
     $data['produk'] = $produk->tampil_produk_last('hari');
 
     return view('ramal/hari', $data);

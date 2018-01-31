@@ -136,10 +136,10 @@
                         <li class="{{ Request::path() == 'lapor/bulan' || $page == 'lap_bulan' ? 'active' : '' }}"><a href="{{ route('lapor_bulan') }}" class="menu-item">Bulanan</a></li>
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="icon-shopping-basket"></i><span class="menu-title">Rencana Pembelian</span></a>
+                <li class=" nav-item"><a href="#"><i class="icon-shopping-basket"></i><span class="menu-title">Firm Order</span></a>
                     <ul class="menu-content">
                         <li class="{{ Request::path() == 'pengajuan' ? 'active' : '' }}"><a href="{{ route('pengajuan') }}" class="menu-item">Pengajuan</a></li>
-                        <?php if($posisi=='Administrator' || $posisi=='Direktur'){ echo '<li><a href="card-statistics.html" class="menu-item">Persetujuan</a></li>'; } ?>
+                        <?php if($posisi=='Administrator' || $posisi=='Direktur'){ echo '<li class="'.( Request::path() == 'persetujuan' ? 'active' : '' ).'"><a href="'.route('persetujuan').'" class="menu-item">Persetujuan</a></li>'; } ?>
                     </ul>
                 </li>
                 <li class="{{ Request::path() == 'akun/ganti_pass' ? 'active' : '' }}"><a href="{{ route('ganti_pass') }}"><i class="icon-key3"></i><span class="menu-title">Ubah Password</span></a></li>

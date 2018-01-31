@@ -65,6 +65,10 @@ table.table-sm th, table.table-sm td {
   padding: 0.35rem 1rem !important;
 }
 
+table.table-xs th, table.table-xs td {
+  padding: 0.3rem 0.4rem !important;
+}
+
 .loading {
   padding: 20px;
 }

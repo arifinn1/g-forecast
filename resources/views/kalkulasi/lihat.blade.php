@@ -5,7 +5,7 @@
   <div class="col-xs-12">
     <div class="card" id="card-kal">
       <div class="card-header">
-        <h4 class="card-title">Transaksi to Timeseries</h4>
+        <h4 class="card-title">Transaksi ke Timeseries</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
         <div class="heading-elements">
           <ul class="list-inline mb-0">

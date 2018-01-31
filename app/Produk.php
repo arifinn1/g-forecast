@@ -93,6 +93,73 @@ class Produk extends Model
     return $data;
   }
 
+  public function tampil_stok_by($periode, $tgl, $kd='', $min=false)
+  {
+    $data_t = DB::table("pelumas.suratjalan")
+      ->select(DB::raw("DATE_FORMAT(max(date), '%Y-%m-01') as tgl"))
+      ->first();
+    $data_tg = DB::table("ramal_".$periode)
+      ->select(DB::raw("dibuat, r_awal".($periode=='ming'? ', r_ming':'')))
+      ->whereRaw("dibuat like '$tgl%'")
+      ->orderByRaw('dibuat DESC')
+      ->first();
+    
+    if($data_tg){ $tgl = $data_tg->dibuat; }
+    
+    $data = [];
+    if(!$min){
+      $data = DB::table("d_prod as d_p")
+        ->select(DB::raw("d_p.kd_prod, d_p.nm_db, d_p.satuan, (ifnull(m_sm.jumlah,0) - ifnull(m_sk.jumlah,0)) as jumlah, ifnull(m_sm.jumlah,0)as masuk, ifnull(m_sk.jumlah,0)as keluar, rml.ramalan as ramal, rml.safety_stock as safety, rb.jumlah as r_jml, rb.jml_disetujui as r_diset"))
+        ->leftJoin(DB::raw("(SELECT pd.produk_id, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah FROM pelumas.produk_diorder pd, pelumas.produk p, pelumas.logsrj l, pelumas.suratjalan s WHERE pd.id=l.idbrg AND l.idsrj=s.id AND pd.produk_id=p.id AND s.gudangasal<=1 AND s.date>='".$data_t->tgl."' GROUP BY pd.produk_id) m_sm"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'm_sm.produk_id');
+        })
+        ->leftJoin(DB::raw("(SELECT pd.produk_id, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah FROM pelumas.produk_diorder pd, pelumas.produk p, pelumas.logsrj l, pelumas.suratjalan s WHERE pd.produk_id=p.id AND pd.id=l.idbrg AND l.idsrj=s.id AND l.idcust>100 AND s.date>='".$data_t->tgl."' GROUP BY pd.produk_id) m_sk"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'm_sk.produk_id');
+        })
+        ->leftJoin(DB::raw("(select kd_prod, ramalan, safety_stock from ramal_$periode where dibuat='$tgl') rml"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'rml.kd_prod');
+        })
+        ->leftJoin(DB::raw("(select * from r_det_beli where kd_rbeli='$kd') rb"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'rb.kd_prod');
+        })
+        ->orderByRaw('d_p.kd_prod ASC')
+        ->get();
+    }else{
+      $data = DB::table("d_prod as d_p")
+        ->select(DB::raw("d_p.kd_prod, d_p.nm_db, d_p.satuan, (ifnull(m_sm.jumlah,0) - ifnull(m_sk.jumlah,0)) as jumlah, ifnull(m_sm.jumlah,0)as masuk, ifnull(m_sk.jumlah,0)as keluar, rml.ramalan as ramal, rml.safety_stock as safety, rb.jumlah as r_jml, rb.jml_disetujui as r_diset"))
+        ->leftJoin(DB::raw("(SELECT pd.produk_id, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah FROM pelumas.produk_diorder pd, pelumas.produk p, pelumas.logsrj l, pelumas.suratjalan s WHERE pd.id=l.idbrg AND l.idsrj=s.id AND pd.produk_id=p.id AND s.gudangasal<=1 AND s.date>='".$data_t->tgl."' GROUP BY pd.produk_id) m_sm"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'm_sm.produk_id');
+        })
+        ->leftJoin(DB::raw("(SELECT pd.produk_id, SUM(CASE WHEN p.dus>pd.satuan THEN pd.jumlah/p.dus ELSE pd.jumlah END) as jumlah FROM pelumas.produk_diorder pd, pelumas.produk p, pelumas.logsrj l, pelumas.suratjalan s WHERE pd.produk_id=p.id AND pd.id=l.idbrg AND l.idsrj=s.id AND l.idcust>100 AND s.date>='".$data_t->tgl."' GROUP BY pd.produk_id) m_sk"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'm_sk.produk_id');
+        })
+        ->leftJoin(DB::raw("(select kd_prod, ramalan, safety_stock from ramal_$periode where dibuat='$tgl') rml"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'rml.kd_prod');
+        })
+        ->join(DB::raw("(select * from r_det_beli where kd_rbeli='$kd') rb"), function($join) {
+          $join->on('d_p.kd_prod', '=', 'rb.kd_prod');
+        })
+        ->orderByRaw('d_p.kd_prod ASC')
+        ->get();
+    }
+    
+    foreach( $data as $baris ){
+      if(!is_null($baris->ramal)){ $baris->ramal = array_slice(json_decode($baris->ramal), -4); }
+    }
+
+    if($data_tg){ 
+      $data[0]->dibuat = $data_tg->dibuat;
+      $data[0]->r_awal = $data_tg->r_awal;
+      $data[0]->r_ming = $periode=='ming' ? $data_tg->r_ming : '';
+    }else{
+      $data[0]->dibuat = '';
+      $data[0]->r_awal = '';
+      $data[0]->r_ming = '';
+    }
+    
+    return $data;
+  }
+
   public function tampil_produk($periode)
   {
     $data = DB::table("f_penj_$periode as f")

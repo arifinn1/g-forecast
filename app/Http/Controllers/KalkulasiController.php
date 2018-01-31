@@ -23,8 +23,8 @@ class KalkulasiController extends Controller
     $data['minggu'] = $dt_day->minggu;
     $data['bulan'] = $dt_day->bulan;
     $data['title'] = 'Kalkulasi - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
 
     return view('kalkulasi/lihat', $data);
   }

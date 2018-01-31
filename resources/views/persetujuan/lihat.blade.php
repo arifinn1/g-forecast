@@ -3,9 +3,9 @@
 @section('content')
 <div class="row">
   <div class="col-xs-12">
-    <div class="card" id="card-tpengajuan">
+    <div class="card" id="card-tpersetujuan">
       <div class="card-header">
-        <h4 class="card-title">Pengajuan Firm Order</h4>
+        <h4 class="card-title">Persetujuan Firm Order</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
         <div class="heading-elements">
           <ul class="list-inline mb-0">
@@ -22,7 +22,7 @@
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>{{ session('pesan') }}</div>
             @endif
           </div>
-          <table id="tpengajuan">
+          <table id="tpersetujuan">
             <thead>
               <tr>
                 <th>#</th>
@@ -34,7 +34,7 @@
                 <th>Status</th>
                 <th>Tgl Update Status</th>
                 <th>Keterangan</th>
-                <th class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="ClearInput('', '', '{{ $nama }}', '', 'bulanan', '', 'menunggu', '', true)"><i class="icon-plus3"></i></button></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -55,7 +55,6 @@
                   <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-info" onclick="ClearInput({{ $baris->kd }}, '{{ $baris->ref_ramal }}', '{{ $baris->nama_peng }}', '{{ $baris->nama_acc }}', '{{ $baris->periode }}', '{{ $baris->tgl_periode }}', '{{ $baris->status }}', '{{ $baris->ket }}', true)"><i class="icon-pencil3"></i></button>
                     <?php if($baris->status=='menunggu'){ ?> <button type="button" class="btn btn-sm btn-warning" onclick="Hapus({{ $baris->kd }}, '{{ $baris->tgl_periode }}')"><i class="icon-trash2"></i></button><?php } ?>
-                    <button type="button" class="btn btn-sm btn-default" onclick="Cetak({{ $baris->kd }})"><i class="icon-print"></i></button>
                   </div>
                 </td>
               </tr>
@@ -66,9 +65,9 @@
       </div>
     </div>
 
-    <div class="card" id="card-pengajuan">
+    <div class="card" id="card-persetujuan">
       <div class="card-header">
-        <h4 class="card-title" id="basic-layout-form">Form Pengajuan</h4>
+        <h4 class="card-title" id="basic-layout-form">Form Persetujuan</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
         <div class="heading-elements">
           <ul class="list-inline mb-0">
@@ -80,7 +79,7 @@
       <div class="card-body collapse in">
         <div class="card-block card-dashboard">
           <div id="alert-input"></div>
-          <form id="form-pengajuan" class="form" method="post" autocomplete="off" action="/pengajuan/simpan">
+          <form id="form-persetujuan" class="form" method="post" autocomplete="off" action="/persetujuan/setujui">
             {{ csrf_field() }}
             <div class="form-body overflow-none">
               <div class="row">
@@ -152,14 +151,16 @@
                 <i class="icon-cross2"></i> Batal
               </button>
               <button id="btn-simpan" type="submit" class="btn btn-primary">
-                <i class="icon-check2"></i> Simpan
+                <i class="icon-check2"></i> Setujui
+              </button>
+              <button id="btn-tolak" type="button" class="btn btn-primary" onclick="Tolak()">
+                <i class="icon-ban"></i> Tolak
               </button>
             </div>
           </form>
         </div>
 
         <div class="card-block card-dashboard">
-            <div id="alert-view"></div>
             <table id="tproduk">
               <thead>
                 <tr>
@@ -189,8 +190,8 @@
                   </td>
                   <td class="safety">{{ $baris->safety }}</td>
                   <td class="peramalan">{{ $baris->ramal[0] }}</td>
-                  <td><input type="number" id="ren{{ $baris->kd_prod }}" value=""></td>
-                  <td><!--<input type="number" id="set{{ $baris->kd_prod }}" value="">--><span id="set{{ $baris->kd_prod }}_txt"></span></td>
+                  <td><span id="ren{{ $baris->kd_prod }}_txt"></td>
+                  <td><input type="number" id="set{{ $baris->kd_prod }}" value=""></span></td>
                 </tr>
                 @endforeach
               </tbody>
@@ -206,7 +207,7 @@
   produk = JSON.parse(`<?php echo json_encode($produk); ?>`);
 
   $(document).ready(function() {
-    tpengajuan = $('#tpengajuan').DataTable({
+    tpersetujuan = $('#tpersetujuan').DataTable({
       "columns": [
         { "data": "kd" },
         { "data": "periode" },
@@ -227,19 +228,15 @@
       "paging": false
     });
 
-    $('#tpengajuan tbody').on( 'click', 'div.btn-group', function () {
+    $('#tpersetujuan tbody').on( 'click', 'div.btn-group', function () {
       active_row = $(this).parents('tr');
     } );
 
-    $('#card-pengajuan').hide();
+    $('#card-persetujuan').hide();
     ReloadRamal('bulanan');
   });
 
-  function Cetak(kd){
-    window.location.href = "/firm_order/"+kd;
-  }
-
-  $('#form-pengajuan').submit(function() {
+  $('#form-persetujuan').submit(function() {
     $('#periode').attr('disabled', false);
     if($('#periode').val()!=''){
       if($('#status_txt').html()=='Menunggu'){
@@ -255,34 +252,35 @@
     }
   });
 
-  function Hapus(kd, periode){
+  function Tolak(){
+    var periode = $('#tgl_periode_txt').html();
     if(confirm("Yakin ingin menghapus firm order untuk periode "+periode+" ?")){
       jQuery.ajax({
         type: "POST",
-        url: "/pengajuan/hapus",
-        data: { _token: "{{ csrf_token() }}", kd: kd },
+        url: "/persetujuan/tolak",
+        data: { _token: "{{ csrf_token() }}", kd: $('#kd').val() },
         success: function(res)
         {
           res = parseInt(res);
           if(res>0){
-            tpengajuan.row(active_row).remove().draw();
-            active_row = null;
-            show_alert("#alert-view","<strong>Sukses!</strong> Data berhasil dihapus.", "success");
-          }else{ show_alert("#alert-view","<strong>Gagal!</strong> Data gagal dihapus.", "warning"); }
+            ClearInput('', '', '{{ $nama }}', '', 'bulanan', new Date(), 'menunggu', '', false);
+            show_alert("#alert-view","<strong>Sukses!</strong> Status persetujuan berhasil disimpan.", "success");
+            setTimeout(function(){ window.location.reload(); }, 3000);
+          }else{ show_alert("#alert-input","<strong>Gagal!</strong> Status persetujuan gagal disimpan.", "warning"); }
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
-          if(confirm("Hapus data gagal, coba lagi?")){ Hapus(kd, periode); }
+          if(confirm("Perubahan status data gagal, coba lagi?")){ Hapus(kd, periode); }
         }
       });
     }
   }
 
-  $("input[id^='ren']").change(function() {
+  $("input[id^='set']").change(function() {
     var kd_prod = ($(this).attr('id')).substr(3);
     for(var i=0; i<produk.length; i++){
       if(produk[i]['kd_prod']==kd_prod){
-        produk[i]['r_jml'] = parseInt($(this).val());
+        produk[i]['r_diset'] = parseInt($(this).val());
       }
     }
   });
@@ -303,13 +301,13 @@
     }
   });
 
-  var tpengajuan, tproduk, active_row;
+  var tpersetujuan, tproduk, active_row;
 
   function AmbilStok(periode, ref_ramal, kd){
     block_card('#btn-simpan');
     jQuery.ajax({
       type: "POST",
-      url: "/pengajuan/ambil",
+      url: "/persetujuan/ambil",
       data: { _token: "{{ csrf_token() }}", periode: periode ,ref_ramal: ref_ramal, kd: kd },
       success: function(res)
       {
@@ -336,11 +334,11 @@
 
   function ClearInput(kd, ref_r, dibuat_oleh, disetujui_oleh, periode, tgl_periode, status, ket, show){
     if(show){
-      $('#card-pengajuan').show('slow');
-      $('#card-tpengajuan').hide('slow');
+      $('#card-persetujuan').show('slow');
+      $('#card-tpersetujuan').hide('slow');
     }else{
-      $('#card-pengajuan').hide('slow');
-      $('#card-tpengajuan').show('slow');
+      $('#card-persetujuan').hide('slow');
+      $('#card-tpersetujuan').show('slow');
     }
 
     $('#kd').val(kd);
@@ -360,6 +358,8 @@
 
     $('#status_txt').html(ucwords(status));
     $('#btn-simpan').attr('disabled', status!='menunggu');
+    $('#btn-tolak').attr('disabled', status!='menunggu');
+    $("#tproduk input[id^='set']").attr('disabled', status!='menunggu');
     $('#ket').html(ket);
     $('#periode').attr('disabled', kd!='');
   }
@@ -380,37 +380,35 @@
     }
   }
 
-  function ReloadRamal(periode){    
-    //tproduk.page.len(-1).draw();
-    var _kd = $('#kd').val();
-    var editable = $('#status_txt').html()=='Menunggu';
+  function ReloadRamal(periode){
+    var _kd = $('#kd').val(), _row, _tr;
+    var editable = $('#status_txt').html()!='Ditolak';
     for(var i=0; i<produk.length; i++){
-      $('#tr'+produk[i]['kd_prod']+' #ren'+produk[i]['kd_prod']).val(0);
-      produk[i]['jumlah'] = parseFloat(produk[i]['jumlah']);
-      if(periode!='' && produk[i]['safety'] != null){
-        $('#tr'+produk[i]['kd_prod']+' .safety').html(produk[i]['safety']);
+      if(produk[i]['ramal']){
         $('#tr'+produk[i]['kd_prod']+' .peramalan').html(parseFloat(produk[i]['ramal'][0]).toFixed(2));
-        if(_kd==''){
-          if(parseFloat(produk[i]['jumlah'])<produk[i]['ramal'][0]){
-            $('#ren'+produk[i]['kd_prod']).val(Math.floor(produk[i]['ramal'][0] - produk[i]['jumlah']));
-          }else{
-            $('#ren'+produk[i]['kd_prod']).val(0);
-          }
-        }else{
-          $('#ren'+produk[i]['kd_prod']).val(Math.floor(produk[i]['r_jml']));
-        }
+        $('#tr'+produk[i]['kd_prod']+' .safety').html(produk[i]['safety']);
       }else{
-        if(_kd==''){ $('#ren'+produk[i]['kd_prod']).val(0);
-        }else{ $('#ren'+produk[i]['kd_prod']).val(Math.floor(produk[i]['r_jml'])); }
-
-        $('#tr'+produk[i]['kd_prod']+' .safety').html('-');
         $('#tr'+produk[i]['kd_prod']+' .peramalan').html('-');
+        $('#tr'+produk[i]['kd_prod']+' .safety').html('-');
       }
-      produk[i]['r_jml'] = parseInt($('#ren'+produk[i]['kd_prod']).val());
-      $('#ren'+produk[i]['kd_prod']).attr('readonly', !editable);
-      if(!editable){ $('#set'+produk[i]['kd_prod']+'_txt').html(produk[i]['r_diset']); }
+
+      _tr = $('#tr'+produk[i]['kd_prod']);
+      _row = tproduk.row(_tr);
+      if(!produk[i]['r_jml']){
+        produk[i]['r_jml'] = 0;
+        _tr.hide();
+      }else{
+        produk[i]['r_jml'] = produk[i]['r_jml'];
+        _tr.show();
+      }
+      $('#ren'+produk[i]['kd_prod']+'_txt').html(produk[i]['r_jml']);
+      
+      if(!produk[i]['r_diset']){ produk[i]['r_diset'] = produk[i]['r_jml'];
+      }else{ produk[i]['r_diset'] = produk[i]['r_diset']; }
+      $('#set'+produk[i]['kd_prod']).val(produk[i]['r_diset']);
+
+      $('#set'+produk[i]['kd_prod']).attr('readonly', !editable);
     }
-    //tproduk.page.len(10).draw();    
   }
 </script>
 @endsection

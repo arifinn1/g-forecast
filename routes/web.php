@@ -68,6 +68,14 @@ Route::group(['middleware' => ['auth']], function () {
   
   Route::get('/pengajuan', 'PengajuanController@index')->name('pengajuan');
   Route::post('/pengajuan/simpan', 'PengajuanController@simpan')->name('pengajuan_simpan');
+  Route::post('/pengajuan/ambil', 'PengajuanController@ambil_stok')->name('pengajuan_ambil');
+  Route::post('/pengajuan/hapus', 'PengajuanController@hapus')->name('pengajuan_hapus');
+  Route::get('/firm_order/{kd}/', 'PengajuanController@cetak')->name('cetak_firm');
+
+  Route::get('/persetujuan', 'PersetujuanController@index')->name('persetujuan');
+  Route::post('/persetujuan/ambil', 'PersetujuanController@ambil_stok')->name('persetujuan_ambil');
+  Route::post('/persetujuan/tolak', 'PersetujuanController@tolak')->name('persetujuan_tolak');
+  Route::post('/persetujuan/setujui', 'PersetujuanController@setujui')->name('persetujuan_setujui');
 });
 
 Auth::routes();

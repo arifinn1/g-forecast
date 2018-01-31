@@ -19,8 +19,8 @@ class LaporanController extends Controller
     $data['datatables'] = true;
     //$data['$ex_pdf'] = true;
     $data['title'] = 'Laporan Bulanan - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
     $data['tanggal'] = $ramalbulan->tampil_tgl_ramal();
     $data['stanggal'] = $tanggal;
     $data['dramal'] = $ramalbulan->tampil_data_ramal($tanggal);
@@ -37,8 +37,8 @@ class LaporanController extends Controller
     $data['chart'] = true;
     $data['datatables'] = true;
     $data['title'] = 'Laporan Mingguan - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
     $data['tanggal'] = $ramalminggu->tampil_tgl_ramal();
     $data['stanggal'] = $tanggal;
     $data['dramal'] = $ramalminggu->tampil_data_ramal($tanggal);
@@ -55,8 +55,8 @@ class LaporanController extends Controller
     $data['chart'] = true;
     $data['datatables'] = true;
     $data['title'] = 'Laporan Harian - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
     $data['tanggal'] = $ramalhari->tampil_tgl_ramal();
     $data['stanggal'] = $tanggal;
     $data['dramal'] = $ramalhari->tampil_data_ramal($tanggal);

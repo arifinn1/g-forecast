@@ -15,8 +15,8 @@ class JadwalController extends Controller
     $data['datatables'] = true;
     $data['datetimepicker'] = true;
     $data['title'] = 'Jadwal - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
 
     return view('jadwal/lihat', $data);
   }
@@ -27,7 +27,7 @@ class JadwalController extends Controller
     $data = [];
     $data['berlaku'] =  date("Y-m-d", strtotime($request->input('berlaku')));
     $data['jam'] =  $request->input('jam').":00";
-    $data['dibuat_oleh'] = $request->session()->get('kd');
+    $data['dibuat_oleh'] = $request->session()->get('g_kd');
     
     if($request->input('kd')==''){
       $jadwal->insert($data);

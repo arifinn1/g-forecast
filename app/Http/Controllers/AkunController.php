@@ -14,8 +14,8 @@ class AkunController extends Controller
     $data['akun'] = $akun->all();
     $data['datatables'] = true;
     $data['title'] = 'Akun - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
-    $data['posisi'] = $request->session()->get('posisi');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
 
     return view('akun/lihat', $data);
   }
@@ -61,7 +61,8 @@ class AkunController extends Controller
   {
     $data = [];
     $data['title'] = 'Ganti Password - Genetic Forecast';
-    $data['nama'] = $request->session()->get('nama');
+    $data['nama'] = $request->session()->get('g_nama');
+    $data['posisi'] = $request->session()->get('g_posisi');
     return view('akun/ganti_pass', $data);
   }
 
@@ -69,9 +70,9 @@ class AkunController extends Controller
   {
     $ret = "TEST";
 
-    if($akun->cek_pass($request->session()->get('nik'), $request->input('pass_lama')))
+    if($akun->cek_pass($request->session()->get('g_nik'), $request->input('pass_lama')))
     {
-      $data = $akun->where('nik', $request->session()->get('nik'))->first();
+      $data = $akun->where('nik', $request->session()->get('g_nik'))->first();
       $data->password = bcrypt($request->input('pass_baru1'));
       $data->save();
       $ret = "SUKSES";

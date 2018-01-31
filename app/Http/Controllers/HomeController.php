@@ -24,18 +24,18 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->session()->exists('nik')) {
+        if (!$request->session()->exists('g_nik')) {
             $user = Auth::user();
-            $request->session()->put('kd', $user->kd);
-            $request->session()->put('nik', $user->nik);
-            $request->session()->put('nama', $user->nama);
-            $request->session()->put('posisi', $user->posisi);
+            $request->session()->put('g_kd', $user->kd);
+            $request->session()->put('g_nik', $user->nik);
+            $request->session()->put('g_nama', $user->nama);
+            $request->session()->put('g_posisi', $user->posisi);
         }
 
         $data = [];
         $data['title'] = 'Home - Genetic Forecast';
-        $data['nama'] = $request->session()->get('nama');
-        $data['posisi'] = $request->session()->get('posisi');
+        $data['nama'] = $request->session()->get('g_nama');
+        $data['posisi'] = $request->session()->get('g_posisi');
 
         return view('home', $data);
     }
